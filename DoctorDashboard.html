@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Asma — Doctor Dashboard | AUMATIQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AUMATIQ — Doctor Internal Dashboard v1.0 (Part 6)
+   Female Doctor Theme: Deep Plum + Sky Blue + Teal
+   AUMATIQ Brand: bg #0A0A0F | cards #0D1117 | accent #4F46E5
+   clinic.drasma@gmail.com
+   ============================================================ */
+:root {
+  /* AUMATIQ Core */
+  --bg:     #0A0A0F;
+  --bg2:    #0D1117;
+  --bg3:    #111118;
+  --bg4:    #1A1A2E;
+  --ind:    #4F46E5;
+  --ind2:   #6366F1;
+  --gold:   #F5A623;
+  --gold2:  #F8C85D;
+  --wht:    #F8F9FF;
+  --sil:    #A0A0B0;
+  --sil2:   #606070;
+  /* Doctor Sky Blue Theme accents */
+  --rose:   #0EA5E9;
+  --rose2:  #38BDF8;
+  --teal:   #14B8A6;
+  --teal2:  #2DD4BF;
+  /* Status */
+  --ok:     #22C55E;
+  --warn:   #F59E0B;
+  --err:    #EF4444;
+  --info:   #3B82F6;
+  /* Borders */
+  --bd:     rgba(79,70,229,0.22);
+  --bd2:    rgba(79,70,229,0.45);
+  --bd-r:   rgba(14,165,233,0.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--wht);
+  font-family:'Inter',sans-serif;font-size:15px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:rgba(10,10,15,0.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bd);
+  padding:0 24px;height:60px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:16px;
+  position:sticky;top:0;z-index:200;
+  flex-shrink:0;
+}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.tb-logo{
+  display:flex;align-items:center;gap:9px;text-decoration:none;
+}
+.tb-logo-icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--rose),var(--ind));
+  border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:16px;
+}
+.tb-logo-txt{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:800;
+  color:var(--wht);letter-spacing:0.5px;
+}
+.tb-logo-txt em{color:var(--rose);font-style:normal;}
+.tb-divider{width:1px;height:28px;background:var(--bd);}
+.tb-clinic{
+  font-size:13px;color:var(--sil);font-weight:500;
+}
+.tb-right{display:flex;align-items:center;gap:12px;}
+.tb-time{
+  font-size:12px;color:var(--sil2);
+  background:var(--bg3);border:1px solid var(--bd);
+  padding:5px 12px;border-radius:6px;
+  font-family:'Inter',sans-serif;
+}
+.tb-notif{
+  position:relative;width:36px;height:36px;
+  background:var(--bg3);border:1px solid var(--bd);
+  border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.2s;
+  font-size:16px;flex-shrink:0;
+}
+.tb-notif:hover{border-color:var(--bd2);}
+.notif-dot{
+  position:absolute;top:6px;right:6px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--rose);border:1.5px solid var(--bg);
+}
+.tb-profile{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1px solid var(--bd);
+  padding:6px 12px 6px 6px;border-radius:10px;
+  cursor:pointer;transition:all 0.2s;
+}
+.tb-profile:hover{border-color:var(--rose);}
+.tb-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--ind));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;flex-shrink:0;
+  font-family:'Syne',sans-serif;
+}
+.tb-pname{font-size:13px;font-weight:600;color:var(--wht);}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;min-height:0;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--bg2);
+  border-right:1px solid var(--bd);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  position:sticky;top:60px;
+  height:calc(100vh - 60px);
+}
+.sb-section{padding:20px 12px 8px;font-size:10px;font-weight:700;
+  color:var(--sil2);text-transform:uppercase;letter-spacing:1.5px;}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;margin:2px 8px;
+  border-radius:8px;cursor:pointer;transition:all 0.2s;
+  color:var(--sil);font-size:13px;font-weight:500;
+  text-decoration:none;border:none;background:none;
+  width:calc(100% - 16px);text-align:left;
+}
+.sb-item:hover{background:rgba(79,70,229,0.08);color:var(--wht);}
+.sb-item.active{
+  background:rgba(79,70,229,0.15);color:var(--wht);
+  border:1px solid var(--bd);
+}
+.sb-item.active .sb-icon{color:var(--ind2);}
+.sb-item.rose-active{
+  background:rgba(14,165,233,0.1);color:var(--wht);
+  border:1px solid var(--bd-r);
+}
+.sb-item.rose-active .sb-icon{color:var(--rose2);}
+.sb-icon{font-size:16px;width:18px;text-align:center;flex-shrink:0;}
+.sb-badge{
+  margin-left:auto;background:var(--rose);color:#fff;
+  font-size:10px;font-weight:700;padding:2px 7px;
+  border-radius:10px;min-width:20px;text-align:center;
+}
+.sb-badge.ind{background:var(--ind);}
+.sb-badge.warn{background:var(--warn);}
+.sb-spacer{flex:1;}
+.sb-bottom{
+  padding:12px;border-top:1px solid var(--bd);
+  font-size:11px;color:var(--sil2);text-align:center;
+  line-height:1.5;
+}
+.sb-bottom a{color:var(--ind2);text-decoration:none;}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;padding:28px 28px 60px;}
+@media(max-width:900px){.main{padding:20px 16px 60px;}}
+
+/* ── PAGE HEADER ── */
+.page-hd{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+  margin-bottom:28px;
+}
+.page-hd-left .page-lbl{
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--rose);margin-bottom:4px;
+}
+.page-hd-left h1{
+  font-family:'Syne',sans-serif;
+  font-size:26px;font-weight:800;color:var(--wht);
+  line-height:1.2;
+}
+.page-hd-left p{font-size:13px;color:var(--sil);margin-top:4px;}
+.page-hd-right{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 18px;border-radius:8px;font-size:13px;
+  font-weight:600;cursor:pointer;border:none;
+  transition:all 0.2s;font-family:'Inter',sans-serif;
+  min-height:38px;white-space:nowrap;
+}
+.btn-ind{background:var(--ind);color:var(--wht);}
+.btn-ind:hover{background:var(--ind2);transform:translateY(-1px);}
+.btn-rose{background:var(--rose);color:#fff;}
+.btn-rose:hover{background:var(--rose2);transform:translateY(-1px);}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:var(--teal2);}
+.btn-out{
+  background:transparent;color:var(--sil);
+  border:1px solid var(--bd);
+}
+.btn-out:hover{color:var(--wht);border-color:var(--bd2);}
+.btn-gold{background:var(--gold);color:#0A0A0F;font-weight:700;}
+.btn-gold:hover{background:var(--gold2);}
+.btn-ok{background:rgba(34,197,94,0.15);color:#86EFAC;border:1px solid rgba(34,197,94,0.3);}
+.btn-ok:hover{background:rgba(34,197,94,0.25);}
+.btn-err{background:rgba(239,68,68,0.12);color:#FCA5A5;border:1px solid rgba(239,68,68,0.3);}
+.btn-err:hover{background:rgba(239,68,68,0.22);}
+.btn-sm{padding:7px 13px;font-size:12px;min-height:32px;}
+.btn:disabled{opacity:0.45;cursor:not-allowed;transform:none!important;}
+
+/* ── STAT CARDS ROW ── */
+.stat-row{
+  display:grid;gap:16px;margin-bottom:24px;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+}
+.stat-card{
+  background:var(--bg2);border:1px solid var(--bd);
+  border-radius:14px;padding:20px;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.stat-card.c-rose::before{background:linear-gradient(90deg,var(--rose),var(--rose2));}
+.stat-card.c-teal::before{background:linear-gradient(90deg,var(--teal),var(--teal2));}
+.stat-card.c-ind::before{background:linear-gradient(90deg,var(--ind),var(--ind2));}
+.stat-card.c-gold::before{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.stat-card.c-ok::before{background:linear-gradient(90deg,var(--ok),#4ADE80);}
+.stat-card:hover{border-color:var(--bd2);transform:translateY(-2px);}
+.stat-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:14px;
+}
+.stat-card.c-rose .stat-icon{background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.25);}
+.stat-card.c-teal .stat-icon{background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.25);}
+.stat-card.c-ind  .stat-icon{background:rgba(79,70,229,0.12);border:1px solid var(--bd);}
+.stat-card.c-gold .stat-icon{background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);}
+.stat-card.c-ok   .stat-icon{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);}
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1;
+}
+.stat-card.c-rose .stat-num{color:var(--rose);}
+.stat-card.c-teal .stat-num{color:var(--teal2);}
+.stat-card.c-ind  .stat-num{color:var(--ind2);}
+.stat-card.c-gold .stat-num{color:var(--gold);}
+.stat-card.c-ok   .stat-num{color:var(--ok);}
+.stat-lbl{font-size:13px;color:var(--sil);margin-top:6px;}
+.stat-sub{font-size:11px;color:var(--sil2);margin-top:2px;}
+
+/* ── SECTION CARD ── */
+.sec-card{
+  background:var(--bg2);border:1px solid var(--bd);
+  border-radius:14px;margin-bottom:20px;
+  overflow:hidden;
+}
+.sec-card-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+  padding:18px 22px;border-bottom:1px solid var(--bd);
+}
+.sec-card-hd h3{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--wht);
+  display:flex;align-items:center;gap:8px;
+}
+.sec-body{padding:20px 22px;}
+.sec-body.np{padding:0;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+  text-align:left;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1px;
+  color:var(--sil2);padding:10px 14px;
+  border-bottom:1px solid var(--bd);white-space:nowrap;
+}
+tbody td{
+  padding:12px 14px;font-size:13px;
+  border-bottom:1px solid rgba(79,70,229,0.06);
+  vertical-align:middle;
+}
+tbody td:first-child{color:var(--wht);font-weight:500;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(79,70,229,0.04);}
+
+/* ── BADGES ── */
+.bdg{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:12px;
+  font-size:11px;font-weight:600;letter-spacing:0.3px;
+  white-space:nowrap;
+}
+.bdg-pend{background:rgba(245,158,11,0.15);color:#FDE68A;border:1px solid rgba(245,158,11,0.3);}
+.bdg-conf{background:rgba(20,184,166,0.12);color:var(--teal2);border:1px solid rgba(20,184,166,0.25);}
+.bdg-comp{background:rgba(34,197,94,0.12);color:#86EFAC;border:1px solid rgba(34,197,94,0.25);}
+.bdg-canc{background:rgba(239,68,68,0.1);color:#FCA5A5;border:1px solid rgba(239,68,68,0.2);}
+.bdg-appr{background:rgba(79,70,229,0.12);color:var(--ind2);border:1px solid var(--bd);}
+.bdg-rose{background:rgba(14,165,233,0.12);color:var(--rose2);border:1px solid var(--bd-r);}
+
+/* ── SEARCH / FILTER BAR ── */
+.sf-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 22px;border-bottom:1px solid var(--bd);
+  flex-wrap:wrap;
+}
+.sf-input{
+  flex:1;min-width:160px;padding:9px 14px;
+  background:var(--bg3);border:1px solid var(--bd);
+  border-radius:8px;color:var(--wht);font-size:13px;
+  font-family:'Inter',sans-serif;outline:none;
+  transition:border-color 0.2s;
+}
+.sf-input:focus{border-color:var(--ind);}
+.sf-input::placeholder{color:var(--sil2);}
+.sf-sel{
+  padding:9px 12px;background:var(--bg3);
+  border:1px solid var(--bd);border-radius:8px;
+  color:var(--sil);font-size:13px;cursor:pointer;
+  font-family:'Inter',sans-serif;outline:none;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color 0.2s;
+}
+.sf-sel:focus{border-color:var(--ind);}
+.sf-sel option{background:var(--bg2);}
+
+/* ── FORMS ── */
+.form-grid{display:grid;gap:14px;}
+.form-grid.g2{grid-template-columns:1fr 1fr;}
+.form-grid.g3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:640px){.form-grid.g2,.form-grid.g3{grid-template-columns:1fr;}}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.fl{font-size:11px;font-weight:600;color:var(--sil);text-transform:uppercase;letter-spacing:0.5px;}
+.fi,.fs,.fta{
+  padding:10px 13px;background:var(--bg3);
+  border:1px solid var(--bd);border-radius:8px;
+  color:var(--wht);font-size:13px;
+  font-family:'Inter',sans-serif;outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  min-height:40px;
+}
+.fi:focus,.fs:focus,.fta:focus{
+  border-color:var(--rose);
+  box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+.fi::placeholder,.fta::placeholder{color:var(--sil2);}
+.fs option{background:var(--bg2);}
+.fta{resize:vertical;min-height:80px;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
+  z-index:1000;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.show{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--bd);
+  border-radius:16px;width:100%;max-width:540px;
+  max-height:90vh;overflow-y:auto;
+  animation:modalIn 0.25s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;border-bottom:1px solid var(--bd);
+  position:sticky;top:0;background:var(--bg2);z-index:1;
+}
+.modal-hd h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--wht);}
+.modal-close{
+  background:none;border:none;color:var(--sil);cursor:pointer;
+  font-size:20px;width:32px;height:32px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.modal-close:hover{background:rgba(239,68,68,0.1);color:#FCA5A5;}
+.modal-body{padding:24px;}
+.modal-foot{
+  display:flex;justify-content:flex-end;gap:10px;
+  padding:16px 24px;border-top:1px solid var(--bd);
+}
+
+/* ── ALERTS ── */
+.al{
+  padding:12px 16px;border-radius:10px;
+  font-size:13px;margin-bottom:14px;line-height:1.6;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.al-ok{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86EFAC;}
+.al-err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#FCA5A5;}
+.al-inf{background:rgba(79,70,229,0.1);border:1px solid var(--bd2);color:var(--ind2);}
+.al-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#FDE68A;}
+
+/* ── TODAY SCHEDULE ── */
+.schedule-list{display:flex;flex-direction:column;gap:8px;}
+.sched-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 14px;border-radius:10px;
+  background:var(--bg3);border:1px solid var(--bd);
+  transition:all 0.2s;
+}
+.sched-item:hover{border-color:var(--bd2);}
+.sched-time{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  color:var(--teal2);min-width:65px;
+}
+.sched-name{font-size:13px;font-weight:600;color:var(--wht);flex:1;}
+.sched-reason{font-size:12px;color:var(--sil);}
+.sched-actions{display:flex;gap:6px;flex-shrink:0;}
+
+/* ── PATIENT CARD (mini) ── */
+.pt-mini{
+  display:flex;align-items:center;gap:12px;
+  padding:14px;background:var(--bg3);
+  border:1px solid var(--bd);border-radius:12px;
+  transition:all 0.2s;cursor:pointer;
+}
+.pt-mini:hover{border-color:var(--bd-r);}
+.pt-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--ind));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  color:#fff;flex-shrink:0;
+}
+.pt-info .pt-name{font-size:13px;font-weight:600;color:var(--wht);}
+.pt-info .pt-sub{font-size:11px;color:var(--sil);margin-top:2px;}
+
+/* ── PENDING UPLOAD CARD ── */
+.upload-card{
+  padding:16px;background:var(--bg3);
+  border:1px solid rgba(245,166,35,0.25);
+  border-radius:12px;margin-bottom:10px;
+  transition:all 0.2s;
+}
+.upload-card:hover{border-color:rgba(245,166,35,0.5);}
+.upload-card-hd{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;margin-bottom:10px;
+}
+.upload-card-name{font-size:13px;font-weight:600;color:var(--wht);}
+.upload-card-meta{font-size:12px;color:var(--sil);margin-top:2px;}
+.upload-card-actions{display:flex;gap:8px;}
+
+/* ── SPINNER ── */
+.spin{
+  display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,0.2);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin 0.6s linear infinite;vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EMPTY STATE ── */
+.empty{
+  text-align:center;padding:48px 20px;
+  color:var(--sil);font-size:13px;
+}
+.empty .ei{font-size:42px;margin-bottom:10px;}
+.empty h4{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--sil);margin-bottom:6px;}
+
+/* ── GRID UTILS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:1100px){.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}}
+
+/* ── QUICK NOTE ── */
+.quick-note{
+  padding:14px;background:rgba(14,165,233,0.05);
+  border:1px solid var(--bd-r);border-radius:10px;
+  font-size:13px;color:var(--sil);font-style:italic;
+  margin-top:10px;line-height:1.6;
+}
+
+/* ── PROGRESS BAR ── */
+.prog-bar-wrap{margin-top:6px;}
+.prog-bar{
+  height:4px;background:var(--bg4);border-radius:2px;
+  overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--rose),var(--ind2));
+  transition:width 0.6s ease;
+}
+
+/* ── MOBILE NAV (bottom) ── */
+.mob-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background:rgba(13,17,23,0.97);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--bd);
+  padding:8px 0 env(safe-area-inset-bottom,8px);
+  z-index:300;
+}
+.mob-nav-items{
+  display:flex;justify-content:space-around;align-items:center;
+}
+.mob-nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--sil2);font-size:10px;font-weight:600;
+  cursor:pointer;padding:6px 12px;border-radius:8px;
+  transition:all 0.2s;border:none;background:none;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.mob-nav-item.active{color:var(--rose);}
+.mob-nav-item .mi{font-size:20px;}
+
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .mob-nav{display:block;}
+  .main{padding-bottom:80px;}
+  .topbar{padding:0 16px;}
+  .tb-time,.tb-divider,.tb-clinic{display:none;}
+}
+
+/* ── HIDE UTIL ── */
+.hide{display:none!important;}
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+/* ── COMMUNICATIONS LOG ── */
+.comm-item{
+  display:flex;gap:14px;padding:14px 0;
+  border-bottom:1px solid rgba(79,70,229,0.06);
+}
+.comm-item:last-child{border-bottom:none;}
+.comm-dot{
+  width:10px;height:10px;border-radius:50%;margin-top:5px;
+  flex-shrink:0;
+}
+.comm-dot.email{background:var(--ind2);}
+.comm-dot.whatsapp{background:var(--ok);}
+.comm-dot.sms{background:var(--teal2);}
+.comm-dot.system{background:var(--sil2);}
+.comm-body .comm-title{font-size:13px;font-weight:600;color:var(--wht);}
+.comm-body .comm-meta{font-size:11px;color:var(--sil2);margin-top:2px;}
+/* ═══════════════════════════════════════════════
+   v3.0 — LOGIN SCREEN (Password-only, Doctor/Assistant)
+   ═══════════════════════════════════════════════ */
+#login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+}
+.login-card {
+  width: 100%; max-width: 380px; background: var(--bg2);
+  border: 1px solid var(--bd); border-radius: 16px; padding: 32px;
+}
+.role-select-row { display: flex; gap: 10px; margin-top: 8px; margin-bottom: 20px; }
+.role-select-btn {
+  flex: 1; padding: 12px 8px; border-radius: 8px;
+  border: 1px solid var(--bd); background: var(--bg3);
+  color: var(--sil); font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s ease; text-align: center;
+}
+.role-select-btn:hover { border-color: var(--bd2); color: var(--wht); }
+.role-select-btn.active { background: var(--ind); border-color: var(--ind); color: var(--wht); }
+#login-pass-wrap { margin-bottom: 16px; }
+#login-pass-wrap label { font-size: 13px; color: var(--sil); font-weight: 600; display:block; margin-bottom: 8px; }
+#login-error { color: var(--err); font-size: 12px; margin-bottom: 12px; display: none; }
+
+/* ═══════════════════════════════════════════════
+   v3.0 — NOTIFICATION BELL DROPDOWN
+   ═══════════════════════════════════════════════ */
+.tb-notif { position: relative; cursor: pointer; }
+.notif-count {
+  position: absolute; top: -6px; right: -8px; min-width: 16px; height: 16px;
+  border-radius: 8px; background: var(--rose); color: #fff;
+  font-size: 10px; font-weight: 700; display: none;
+  align-items: center; justify-content: center; padding: 0 4px; line-height: 1;
+}
+.notif-dropdown {
+  position: absolute; top: 36px; right: 0; width: 320px; max-height: 380px; overflow-y: auto;
+  background: var(--bg2); border: 1px solid var(--bd2); border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4); z-index: 500; display: none;
+}
+.notif-dropdown.show { display: block; }
+.notif-dd-head {
+  padding: 14px 16px; border-bottom: 1px solid var(--bd);
+  font-family: 'Syne',sans-serif; font-weight: 700; font-size: 14px; color: var(--wht);
+}
+.notif-dd-item { padding: 12px 16px; border-bottom: 1px solid var(--bd); font-size: 13px; }
+.notif-dd-item:last-child { border-bottom: none; }
+.notif-dd-item .ndi-title { color: var(--wht); font-weight: 600; margin-bottom: 3px; }
+.notif-dd-item .ndi-sub { color: var(--sil2); font-size: 12px; }
+.notif-dd-empty { padding: 30px 16px; text-align: center; color: var(--sil2); font-size: 13px; }
+
+/* ═══════════════════════════════════════════════
+   v3.0 — TRIPLE-DATE / TIME HEADER WIDGET
+   ═══════════════════════════════════════════════ */
+.tb-datetime { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; line-height: 1.3; margin-right: 4px; }
+.tb-dt-time { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--wht); letter-spacing: 0.5px; }
+.tb-dt-dates { font-size: 10px; color: var(--sil2); white-space: nowrap; }
+.tb-dt-dates b { color: var(--sil); font-weight: 600; }
+@media (max-width: 768px) {
+  .tb-datetime { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+  v3.0 — LOGIN SCREEN (ড্যাশবোর্ডে ঢোকার আগে, শুধু এখানেই)
+══════════════════════════════ -->
+<div id="login-screen">
+  <div style="width:100%;max-width:380px;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--wht);margin-bottom:4px;">
+        Clinic <span style="color:var(--rose2);">Dashboard</span>
+      </div>
+      <div style="font-size:13px;color:var(--sil);">Sign in to continue</div>
+    </div>
+
+    <div class="login-card">
+      <div id="login-pass-wrap">
+        <label>Login As</label>
+        <div class="role-select-row">
+          <button type="button" id="role-btn-doctor" class="role-select-btn active" onclick="selectRole('DOCTOR')">🩺 Doctor</button>
+          <button type="button" id="role-btn-assistant" class="role-select-btn" onclick="selectRole('RECEPTIONIST')">🧑‍💼 Assistant</button>
+        </div>
+        <label id="login-pass-label">Doctor Password</label>
+        <input type="password" id="login-pass" class="fi" placeholder="Enter password" autocomplete="current-password" style="width:100%;">
+      </div>
+      <div id="login-error"></div>
+      <button class="btn btn-ind" style="width:100%;justify-content:center;padding:12px;" onclick="doLogin()">Sign In</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+  v3.0 — মূল ড্যাশবোর্ড (লগইনের পরই দেখা যাবে)
+══════════════════════════════ -->
+<div id="main-app" style="display:none;">
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="tb-left">
+    <a href="#" class="tb-logo">
+      <div class="tb-logo-icon">🌸</div>
+      <span class="tb-logo-txt">AUMATIQ<em>.</em></span>
+    </a>
+    <div class="tb-divider"></div>
+    <span class="tb-clinic" id="tbClinic">Doctor Dashboard</span>
+  </div>
+  <div class="tb-right">
+    <div class="tb-datetime">
+      <div class="tb-dt-time" id="tbDtTime">—</div>
+      <div class="tb-dt-dates" id="tbDtDates">—</div>
+    </div>
+    <div class="tb-notif" title="Notifications" onclick="toggleNotifDropdown(event)">
+      🔔<div class="notif-count" id="notifCount">0</div>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-dd-head">Notifications</div>
+        <div id="notifDropdownBody"><div class="notif-dd-empty">Loading...</div></div>
+      </div>
+    </div>
+    <div class="tb-profile" title="Logout" onclick="doLogout()" style="cursor:pointer;">
+      <div class="tb-avatar" id="tbAvatarLetter">D</div>
+      <span class="tb-pname" id="tbDrName">Dr. Asma</span>
+      <span style="font-size:11px;color:var(--sil2);margin-left:4px;">⏻</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <nav class="sidebar">
+    <div class="sb-section">Overview</div>
+    <button class="sb-item active" onclick="navTo('overview',this)">
+      <span class="sb-icon">📊</span> Dashboard
+    </button>
+
+    <div class="sb-section">Clinic</div>
+    <button class="sb-item" onclick="navTo('today',this)">
+      <span class="sb-icon">📅</span> Today's Schedule
+      <span class="sb-badge rose" id="sb-today-count">0</span>
+    </button>
+    <button class="sb-item" onclick="navTo('appointments',this)">
+      <span class="sb-icon">🗓️</span> All Appointments
+    </button>
+    <button class="sb-item" onclick="navTo('patients',this)">
+      <span class="sb-icon">👩‍⚕️</span> Patients
+    </button>
+    <button class="sb-item" onclick="navTo('pending',this)">
+      <span class="sb-icon">🧪</span> Test Approvals
+      <span class="sb-badge warn" id="sb-pending-count">0</span>
+    </button>
+
+    <div class="sb-section">Communication</div>
+    <button class="sb-item" onclick="navTo('followups',this)">
+      <span class="sb-icon">💌</span> Follow-ups
+    </button>
+    <button class="sb-item" onclick="navTo('comms',this)">
+      <span class="sb-icon">📨</span> Email Log
+    </button>
+
+    <div class="sb-section">Settings</div>
+    <button class="sb-item doctor-only" onclick="navTo('settings',this)">
+      <span class="sb-icon">⚙️</span> Settings
+    </button>
+
+    <div class="sb-spacer"></div>
+    <div class="sb-bottom">
+      Powered by <a href="https://aumatiq.com" target="_blank">AUMATIQ</a><br>
+      clinic.drasma@gmail.com
+    </div>
+  </nav>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main" id="mainContent">
+
+    <!-- ════════════════════════════
+      PAGE: OVERVIEW / DASHBOARD
+    ════════════════════════════ -->
+    <div class="tab-page active" id="pg-overview">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Good Morning</div>
+          <h1 id="ovDrName">Dr. Asma</h1>
+          <p id="ovDate">Loading...</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-rose" onclick="refreshAll()">🔄 Refresh</button>
+          <button class="btn btn-ind" onclick="navTo('appointments',null);openAddAppt()">+ New Appointment</button>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-row" id="ovStats">
+        <div class="stat-card c-rose">
+          <div class="stat-icon">📅</div>
+          <div class="stat-num" id="ovToday">—</div>
+          <div class="stat-lbl">Today's Appointments</div>
+          <div class="stat-sub" id="ovTodayPend">— pending</div>
+        </div>
+        <div class="stat-card c-teal">
+          <div class="stat-icon">👩‍⚕️</div>
+          <div class="stat-num" id="ovPatients">—</div>
+          <div class="stat-lbl">Total Patients</div>
+          <div class="stat-sub">registered in system</div>
+        </div>
+        <div class="stat-card c-gold">
+          <div class="stat-icon">🧪</div>
+          <div class="stat-num" id="ovPending">—</div>
+          <div class="stat-lbl">Pending Approvals</div>
+          <div class="stat-sub">test records awaiting</div>
+        </div>
+        <div class="stat-card c-ind">
+          <div class="stat-icon">📊</div>
+          <div class="stat-num" id="ovThisWeek">—</div>
+          <div class="stat-lbl">This Week</div>
+          <div class="stat-sub">total appointments</div>
+        </div>
+        <div class="stat-card c-ok">
+          <div class="stat-icon">✅</div>
+          <div class="stat-num" id="ovCompleted">—</div>
+          <div class="stat-lbl">Completed</div>
+          <div class="stat-sub">all time visits</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- Today's schedule preview -->
+        <div class="sec-card">
+          <div class="sec-card-hd">
+            <h3>📅 Today's Schedule</h3>
+            <button class="btn btn-out btn-sm" onclick="navTo('today',null)">View All →</button>
+          </div>
+          <div class="sec-body">
+            <div class="schedule-list" id="ovScheduleList">
+              <div class="empty"><div class="ei">📅</div><h4>No appointments today</h4></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending test approvals preview -->
+        <div class="sec-card">
+          <div class="sec-card-hd">
+            <h3>🧪 Pending Test Approvals</h3>
+            <button class="btn btn-out btn-sm" onclick="navTo('pending',null)">View All →</button>
+          </div>
+          <div class="sec-body" id="ovPendingList">
+            <div class="empty"><div class="ei">✅</div><h4>All clear!</h4><p>No pending approvals.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent patients -->
+      <div class="sec-card" style="margin-top:0;">
+        <div class="sec-card-hd">
+          <h3>👩‍⚕️ Recent Patients</h3>
+          <button class="btn btn-out btn-sm" onclick="navTo('patients',null)">All Patients →</button>
+        </div>
+        <div class="sec-body np">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>Patient</th><th>ID</th><th>Phone</th>
+                <th>Last Visit</th><th>Status</th><th>Action</th>
+              </tr></thead>
+              <tbody id="ovRecentPt"><tr><td colspan="6" class="empty" style="padding:32px;">
+                <span class="spin" style="width:24px;height:24px;border-width:2.5px;"></span>
+              </td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END OVERVIEW -->
+
+
+    <!-- ════════════════════════════
+      PAGE: TODAY'S SCHEDULE
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-today">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Clinic Schedule</div>
+          <h1>Today's Appointments</h1>
+          <p id="todayDateLabel">Loading...</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-ind" onclick="openAddAppt()">+ Add Appointment</button>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-body">
+          <div class="schedule-list" id="todayList">
+            <div class="empty"><span class="spin" style="width:24px;height:24px;border-width:2.5px;"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: ALL APPOINTMENTS
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-appointments">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Appointment Management</div>
+          <h1>All Appointments</h1>
+          <p>Search, filter, update status, and manage all patient visits.</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-ind" onclick="openAddAppt()">+ New Appointment</button>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sf-bar">
+          <input class="sf-input" id="apptSearch" placeholder="🔍 Search by name, ID, reason..." oninput="renderAppts()">
+          <select class="sf-sel" id="apptStatusFilter" onchange="renderAppts()">
+            <option value="">All Status</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+          <input type="date" class="sf-sel" id="apptDateFilter" onchange="renderAppts()" title="Filter by date">
+        </div>
+        <div class="sec-body np">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>Appt ID</th><th>Patient</th><th>Date</th>
+                <th>Time</th><th>Reason</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="apptTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: PATIENTS
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-patients">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Patient Registry</div>
+          <h1>All Patients</h1>
+          <p>Complete patient database — search, view history, add notes.</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-rose" onclick="openAddPatient()">+ Register Patient</button>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sf-bar">
+          <input class="sf-input" id="ptSearch" placeholder="🔍 Search by name, ID, phone..." oninput="renderPatients()">
+          <select class="sf-sel" id="ptGenderFilter" onchange="renderPatients()">
+            <option value="">All Genders</option>
+            <option>Female</option>
+            <option>Male</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="sec-body np">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>Patient ID</th><th>Name</th><th>Phone</th>
+                <th>Age</th><th>Gender</th><th>Last Visit</th>
+                <th>Email</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="ptTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: TEST APPROVALS
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-pending">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Test Record Management</div>
+          <h1>Test Approvals</h1>
+          <p>Review patient-uploaded and clinic-uploaded test records. Approve or reject to control patient visibility.</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-teal" onclick="openAddTest()">+ Upload Test</button>
+        </div>
+      </div>
+
+      <div class="al al-warn" id="pendingAlert" style="display:none;">
+        ⚠️ You have <strong id="pendingCount">0</strong> pending test records waiting for your approval.
+      </div>
+
+      <!-- Pending tab row -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-rose" id="tFilter-pend" onclick="setTestFilter('Pending Approval',this)">Pending</button>
+        <button class="btn btn-out" id="tFilter-appr" onclick="setTestFilter('Approved',this)">Approved</button>
+        <button class="btn btn-out" id="tFilter-all"  onclick="setTestFilter('',this)">All Records</button>
+      </div>
+
+      <div id="testCardsList"></div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: FOLLOW-UPS
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-followups">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Patient Follow-ups</div>
+          <h1>Follow-up Queue</h1>
+          <p>Patients with completed visits who need follow-up communication or recall.</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-ind" onclick="triggerFollowUpEmails()">
+            📧 Send Follow-up Emails
+          </button>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-body np">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>Patient</th><th>Last Visit</th>
+                <th>Days Since Visit</th><th>Email</th><th>Action</th>
+              </tr></thead>
+              <tbody id="followupTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: EMAIL LOG
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-comms">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">Communication History</div>
+          <h1>Email Log</h1>
+          <p>All automated emails sent from this system.</p>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-body np">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>Time</th><th>Patient</th><th>Type</th><th>Email</th><th>Status</th>
+              </tr></thead>
+              <tbody id="commsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════
+      PAGE: SETTINGS
+    ════════════════════════════ -->
+    <div class="tab-page" id="pg-settings">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-lbl">System Configuration</div>
+          <h1>Settings</h1>
+          <p>Manage clinic profile, working hours, slot duration, and system preferences.</p>
+        </div>
+        <div class="page-hd-right">
+          <button class="btn btn-rose" onclick="saveSettings()">💾 Save Settings</button>
+        </div>
+      </div>
+
+      <div id="settingsMsg"></div>
+
+      <div class="g2">
+        <div class="sec-card">
+          <div class="sec-card-hd"><h3>🏥 Clinic Profile</h3></div>
+          <div class="sec-body">
+            <div class="form-grid">
+              <div class="fg"><label class="fl">Doctor Name</label><input class="fi" id="sDrName" placeholder="Dr. Asma Akter"></div>
+              <div class="fg"><label class="fl">Clinic Name</label><input class="fi" id="sClinicName" placeholder="Dr. Asma Clinic"></div>
+              <div class="fg"><label class="fl">Specialty</label><input class="fi" id="sSpecialty" placeholder="Women's Health & General Medicine"></div>
+              <div class="fg"><label class="fl">Degree</label><input class="fi" id="sDegree" placeholder="MBBS, MCPS, FCPS Part-1"></div>
+              <div class="fg"><label class="fl">Phone</label><input class="fi" id="sPhone" placeholder="01XXXXXXXXX"></div>
+              <div class="fg"><label class="fl">Email</label><input class="fi" id="sEmail" placeholder="clinic.drasma@gmail.com"></div>
+              <div class="fg" style="grid-column:1/-1;"><label class="fl">Clinic Address</label><input class="fi" id="sAddress" placeholder="House, Road, Area, Dhaka"></div>
+              <div class="fg" style="grid-column:1/-1;"><label class="fl">Bio (shown on public website)</label><textarea class="fta" id="sBio" rows="3" placeholder="Dr. Asma is a dedicated physician..."></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-card" style="margin-bottom:20px;">
+            <div class="sec-card-hd"><h3>⏰ Working Hours</h3></div>
+            <div class="sec-body">
+              <div class="form-grid">
+                <div class="fg"><label class="fl">Working Days</label><input class="fi" id="sWorkingDays" placeholder="Sat,Sun,Mon,Tue,Wed"></div>
+                <div class="fg"><label class="fl">Slot Duration (min)</label><input class="fi" type="number" id="sSlotDur" value="20" min="10" max="60"></div>
+                <div class="fg"><label class="fl">Opening Time</label><input class="fi" type="time" id="sOpenTime" value="09:00"></div>
+                <div class="fg"><label class="fl">Closing Time</label><input class="fi" type="time" id="sCloseTime" value="20:00"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-card">
+            <div class="sec-card-hd"><h3>🌐 Website & Links</h3></div>
+            <div class="sec-body">
+              <div class="form-grid">
+                <div class="fg"><label class="fl">Website URL (Web App)</label><input class="fi" id="sWebsiteURL" placeholder="https://script.google.com/..."></div>
+                <div class="fg"><label class="fl">WhatsApp Number</label><input class="fi" id="sWaNumber" placeholder="8801XXXXXXXXX"></div>
+                <div class="fg"><label class="fl">Years Experience</label><input class="fi" type="number" id="sYearsExp" placeholder="8"></div>
+                <div class="fg"><label class="fl">Photo URL (Google Drive)</label><input class="fi" id="sPhotoURL" placeholder="https://drive.google.com/..."></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-card" style="margin-top:0;">
+        <div class="sec-card-hd"><h3>🧪 Test Name Categories</h3></div>
+        <div class="sec-body">
+          <p style="font-size:13px;color:var(--sil);margin-bottom:14px;">These appear in the patient upload dropdown and internal test records.</p>
+          <div id="catList" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
+          <div style="display:flex;gap:10px;">
+            <input class="fi" id="newCatVal" placeholder="Add new test type..." style="max-width:280px;">
+            <button class="btn btn-teal btn-sm" onclick="addCategory()">+ Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END SETTINGS -->
+
+  </main>
+</div>
+
+<!-- ══ MOBILE NAV ══ -->
+<nav class="mob-nav">
+  <div class="mob-nav-items">
+    <button class="mob-nav-item active" onclick="navTo('overview',this)" data-tab="overview">
+      <span class="mi">📊</span>Overview
+    </button>
+    <button class="mob-nav-item" onclick="navTo('today',this)" data-tab="today">
+      <span class="mi">📅</span>Today
+    </button>
+    <button class="mob-nav-item" onclick="navTo('patients',this)" data-tab="patients">
+      <span class="mi">👩‍⚕️</span>Patients
+    </button>
+    <button class="mob-nav-item" onclick="navTo('pending',this)" data-tab="pending">
+      <span class="mi">🧪</span>Tests
+    </button>
+    <button class="mob-nav-item doctor-only" onclick="navTo('settings',this)" data-tab="settings">
+      <span class="mi">⚙️</span>Settings
+    </button>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════
+  MODAL: ADD / EDIT APPOINTMENT
+══════════════════════════════ -->
+<div class="modal-overlay" id="apptModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3 id="apptModalTitle">New Appointment</h3>
+      <button class="modal-close" onclick="closeModal('apptModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="apptModalMsg"></div>
+      <div class="form-grid g2">
+        <div class="fg"><label class="fl">Patient ID *</label><input class="fi" id="mApptPid" placeholder="PT-2026-0001 or leave blank for new"></div>
+        <div class="fg"><label class="fl">Patient Name *</label><input class="fi" id="mApptName" placeholder="Full name"></div>
+        <div class="fg"><label class="fl">Phone *</label><input class="fi" id="mApptPhone" placeholder="01XXXXXXXXX"></div>
+        <div class="fg"><label class="fl">Date *</label><input class="fi" type="date" id="mApptDate"></div>
+        <div class="fg"><label class="fl">Time Slot *</label><input class="fi" id="mApptTime" placeholder="10:00 AM"></div>
+        <div class="fg"><label class="fl">Status</label>
+          <select class="fs" id="mApptStatus">
+            <option>Pending</option><option>Confirmed</option>
+            <option>Completed</option><option>Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:14px;">
+        <label class="fl">Reason / Notes</label>
+        <textarea class="fta" id="mApptReason" placeholder="Reason for visit, diagnosis, or notes..."></textarea>
+      </div>
+      <input type="hidden" id="mApptEditId">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-out" onclick="closeModal('apptModal')">Cancel</button>
+      <button class="btn btn-rose" id="apptSaveBtn" onclick="saveAppt()">Save Appointment</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+  MODAL: ADD PATIENT
+══════════════════════════════ -->
+<div class="modal-overlay" id="ptModal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3>Register New Patient</h3>
+      <button class="modal-close" onclick="closeModal('ptModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="ptModalMsg"></div>
+      <div class="form-grid g2">
+        <div class="fg"><label class="fl">Full Name *</label><input class="fi" id="mPtName" placeholder="Patient full name"></div>
+        <div class="fg"><label class="fl">Phone *</label><input class="fi" id="mPtPhone" placeholder="01XXXXXXXXX"></div>
+        <div class="fg"><label class="fl">Age</label><input class="fi" type="number" id="mPtAge" placeholder="Age" min="1"></div>
+        <div class="fg"><label class="fl">Gender</label>
+          <select class="fs" id="mPtGender">
+            <option value="">Select</option>
+            <option>Female</option><option>Male</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" id="mPtEmail" placeholder="patient@email.com"></div>
+        <div class="fg"><label class="fl">Address</label><input class="fi" id="mPtAddr" placeholder="Address"></div>
+      </div>
+      <div class="fg" style="margin-top:14px;">
+        <label class="fl">Notes</label>
+        <textarea class="fta" id="mPtNotes" placeholder="Medical history, allergies, or notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-out" onclick="closeModal('ptModal')">Cancel</button>
+      <button class="btn btn-rose" onclick="savePatient()">Register Patient</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+  MODAL: ADD TEST RECORD
+══════════════════════════════ -->
+<div class="modal-overlay" id="testModal">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-hd">
+      <h3>📎 Add Test Record</h3>
+      <button class="modal-close" onclick="closeModal('testModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="testModalMsg"></div>
+
+      <!-- Row 1: Patient + Test Name -->
+      <div class="form-grid g2" style="margin-bottom:14px;">
+        <div class="fg">
+          <label class="fl">Patient ID *</label>
+          <input class="fi" id="mTstPid" placeholder="PT-2026-0001">
+        </div>
+        <div class="fg">
+          <label class="fl">Test Name *</label>
+          <select class="fs" id="mTstName">
+            <option value="">Select test type</option>
+            <option>Blood Test</option><option>X-Ray</option>
+            <option>ECG</option><option>Ultrasound</option>
+            <option>MRI</option><option>Urine Test</option>
+            <option>Thyroid Test</option><option>Pregnancy Test</option>
+            <option>COVID-19 Test</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Test Date *</label>
+          <input class="fi" type="date" id="mTstDate">
+        </div>
+        <div class="fg">
+          <label class="fl">Status</label>
+          <select class="fs" id="mTstStatus">
+            <option value="Approved">Approved (visible to patient)</option>
+            <option value="Pending Approval">Pending Approval (hidden)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- File Upload Zone -->
+      <div class="fg" style="margin-bottom:14px;">
+        <label class="fl">Scan / Report File *</label>
+        <div id="testUploadZone" style="
+          border:2px dashed rgba(14,165,233,0.4);
+          border-radius:12px; padding:24px;
+          text-align:center; cursor:pointer;
+          background:rgba(14,165,233,0.03);
+          transition:all 0.2s;
+        " onclick="document.getElementById('mTstFileInput').click()"
+           ondragover="event.preventDefault();this.style.borderColor='var(--rose)';"
+           ondragleave="this.style.borderColor='rgba(14,165,233,0.4)';"
+           ondrop="handleTestFileDrop(event);">
+          <input type="file" id="mTstFileInput"
+                 accept=".pdf,.jpg,.jpeg,.png,.webp,.heic"
+                 style="display:none;"
+                 onchange="handleTestFileSelect(this)">
+          <div id="testUploadIcon" style="font-size:36px;margin-bottom:8px;">📷</div>
+          <div id="testUploadText" style="font-size:13px;color:var(--sil);line-height:1.6;">
+            <strong style="color:var(--wht);">Click to upload or drag & drop</strong><br>
+            PDF, JPG, PNG, HEIC supported · Max 10MB<br>
+            <span style="font-size:11px;color:var(--sil2);">Camera scan, X-Ray image, lab report PDF</span>
+          </div>
+          <div id="testFilePreview" style="display:none;margin-top:10px;">
+            <div id="testImgPreviewWrap" style="display:none;">
+              <img id="testImgPreview" style="max-width:100%;max-height:160px;border-radius:8px;object-fit:contain;" alt="Preview">
+            </div>
+            <div style="margin-top:8px;padding:10px 14px;background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.25);border-radius:8px;display:flex;align-items:center;gap:10px;">
+              <span style="font-size:20px;" id="testFileIcon">📄</span>
+              <div style="text-align:left;flex:1;overflow:hidden;">
+                <div id="testFileName" style="font-size:13px;font-weight:600;color:var(--wht);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+                <div id="testFileSize" style="font-size:11px;color:var(--sil2);margin-top:2px;"></div>
+              </div>
+              <button onclick="clearTestFile(event)" style="background:none;border:none;color:var(--sil2);cursor:pointer;font-size:18px;flex-shrink:0;" title="Remove file">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Uploaded By + Approved By -->
+      <div class="form-grid g2" style="margin-bottom:14px;">
+        <div class="fg">
+          <label class="fl">Uploaded By</label>
+          <input class="fi" id="mTstBy" value="Clinic Staff">
+        </div>
+        <div class="fg">
+          <label class="fl">Approved By</label>
+          <input class="fi" id="mTstApprBy" placeholder="Dr. Asma Akter">
+        </div>
+      </div>
+
+      <!-- Remarks -->
+      <div class="fg">
+        <label class="fl">Doctor's Remarks</label>
+        <textarea class="fta" id="mTstRemarks" placeholder="Diagnosis notes, instructions for patient..."></textarea>
+      </div>
+
+      <!-- Upload progress -->
+      <div id="testUploadProgress" style="display:none;margin-top:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="spin"></span>
+          <span id="testUploadProgressText" style="font-size:13px;color:var(--sil);">Uploading to Drive...</span>
+        </div>
+        <div class="prog-bar-wrap">
+          <div class="prog-bar"><div class="prog-fill" id="testProgFill" style="width:0%;"></div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-out" onclick="closeModal('testModal')">Cancel</button>
+      <button class="btn btn-teal" id="testSaveBtn" onclick="saveTest()">
+        📤 Upload & Save Record
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+  MODAL: PATIENT DETAIL VIEW
+══════════════════════════════ -->
+<div class="modal-overlay" id="ptDetailModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-hd">
+      <h3 id="ptDetailName">Patient Details</h3>
+      <button class="modal-close" onclick="closeModal('ptDetailModal')">✕</button>
+    </div>
+    <div class="modal-body" id="ptDetailBody">
+      Loading...
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-out" onclick="closeModal('ptDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #main-app -->
+
+<!-- ══════════════════════════════
+  JAVASCRIPT
+══════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════
+// DATA LAYER — Google Apps Script calls
+// ═══════════════════════════════════════
+var D = {
+  profile:      {},
+  patients:     [],
+  appointments: [],
+  testRecords:  [],
+  settings:     {},
+  categories:   [],
+  commsLog:     []
+};
+var LOADED = { profile:false, patients:false, appts:false, tests:false };
+
+// ═══════════════════════════════════════
+// v3.0 — SESSION + LOGIN (Password-only: Doctor/Assistant)
+// ═══════════════════════════════════════
+var _session = { token: null, role: null };
+var _selectedRole = 'DOCTOR';
+
+function selectRole(role) {
+  _selectedRole = role;
+  document.getElementById('role-btn-doctor').classList.toggle('active', role === 'DOCTOR');
+  document.getElementById('role-btn-assistant').classList.toggle('active', role === 'RECEPTIONIST');
+  document.getElementById('login-pass-label').textContent = role === 'DOCTOR' ? 'Doctor Password' : 'Assistant Password';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function doLogin() {
+  var pass = document.getElementById('login-pass').value.trim();
+  var errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+
+  if (!pass) {
+    errEl.textContent = 'Password দিতে হবে।';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.querySelector('#login-screen .btn-ind');
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      if (result.success) {
+        _session.token = result.token;
+        _session.role  = result.role;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        // Assistant হলে Settings sidebar item লুকানো (Finance এই ভার্সনে নেই)
+        if (_session.role !== 'DOCTOR') {
+          document.querySelectorAll('.doctor-only').forEach(function(el){ el.style.display = 'none'; });
+        }
+        loadAll();
+      } else {
+        errEl.textContent = result.message || 'Login failed.';
+        errEl.style.display = 'block';
+      }
+    })
+    .withFailureHandler(function(e) {
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      errEl.textContent = 'Connection error. আবার চেষ্টা করো।';
+      errEl.style.display = 'block';
+    })
+    .roleLogin(_selectedRole, pass);
+}
+
+function doLogout() {
+  if (!confirm('লগআউট করতে চাও?')) return;
+  google.script.run.logout(_session.token);
+  _session = { token: null, role: null };
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+  selectRole('DOCTOR');
+}
+
+document.getElementById('login-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ── CALL BACKEND (v3.0: session token স্বয়ংক্রিয়ভাবে প্রথম argument হিসেবে যোগ হয়) ──
+function call(fn, args, cb, errCb) {
+  var runner = google.script.run
+    .withSuccessHandler(function(r){ if(cb) cb(r); })
+    .withFailureHandler(function(e){ if(errCb) errCb(e); else console.error(fn, e); });
+  runner[fn].apply(runner, [_session.token].concat(args || []));
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  // Triple date/time widget (লগইন স্ক্রিনেও দরকার নেই, শুধু dashboard-এ)
+  updateDateTimeWidget();
+  setInterval(updateDateTimeWidget, 1000);
+
+  // Set today's date as default for appointment modal
+  var today = new Date().toISOString().split('T')[0];
+  var mApptDate = document.getElementById('mApptDate');
+  if (mApptDate) mApptDate.value = today;
+  var mTstDate = document.getElementById('mTstDate');
+  if (mTstDate) mTstDate.value = today;
+
+  // v3.0: লগইন হওয়ার আগে dashboard ডেটা লোড হবে না — loadAll() এখন doLogin() success-এর পর কল হয়
+});
+
+// ═══════════════════════════════════════
+// v3.0 — TRIPLE DATE + TIME WIDGET
+// (ইংরেজি তারিখ ইংরেজিতে, বাংলা তারিখ বাংলায়, হিজরি তারিখ বাংলায়)
+// ═══════════════════════════════════════
+function toBanglaDigits(input) {
+  var en = '0123456789', bn = '০১২৩৪৫৬৭৮৯';
+  return String(input).replace(/[0-9]/g, function(d) { return bn[en.indexOf(d)]; });
+}
+
+// বাংলাদেশের সংশোধিত বঙ্গাব্দ (পহেলা বৈশাখ প্রতি বছর ১৪ এপ্রিল, ২০১৯ সংস্কার অনুযায়ী)
+function getBanglaDateParts(d) {
+  var banglaMonths = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  function isGregLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0); }
+
+  var gYear = d.getFullYear();
+  var newYearThisYear = new Date(gYear, 3, 14); // ১৪ এপ্রিল (মাস ইনডেক্স 3 = April)
+
+  var bYear, startOfBanglaYear, choitroLeapCheckYear;
+  if (d >= newYearThisYear) {
+    bYear = gYear - 593;
+    startOfBanglaYear = newYearThisYear;
+    choitroLeapCheckYear = gYear + 1;
+  } else {
+    bYear = gYear - 594;
+    startOfBanglaYear = new Date(gYear - 1, 3, 14);
+    choitroLeapCheckYear = gYear;
+  }
+
+  var diffDays = Math.floor((d - startOfBanglaYear) / 86400000);
+  var choitroDays = isGregLeap(choitroLeapCheckYear) ? 30 : 29;
+  var monthLengths = [31,31,31,31,31,30,30,30,30,30,30,choitroDays];
+
+  var bMonthIdx = 0, remaining = diffDays;
+  for (var i = 0; i < monthLengths.length; i++) {
+    if (remaining < monthLengths[i]) { bMonthIdx = i; break; }
+    remaining -= monthLengths[i];
+  }
+
+  return { day: remaining + 1, month: banglaMonths[bMonthIdx], year: bYear };
+}
+
+function getBanglaDateString(d) {
+  var bp = getBanglaDateParts(d);
+  return toBanglaDigits(bp.day) + ' ' + bp.month + ' ' + toBanglaDigits(bp.year);
+}
+
+// হিজরি তারিখ — ব্রাউজারের বিল্ট-ইন Islamic (Umm al-Qura) ক্যালেন্ডার ব্যবহার করে, বাংলায় অনুবাদ করা
+function getHijriDateBangla(d) {
+  try {
+    var hijriMonthsBn = ['মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলক্বদ','জিলহজ'];
+    var fmt = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
+    var parts = fmt.formatToParts(d);
+    var day, month, year;
+    parts.forEach(function(p) {
+      if (p.type === 'day') day = parseInt(p.value, 10);
+      if (p.type === 'month') month = parseInt(p.value, 10);
+      if (p.type === 'year') year = parseInt(p.value, 10);
+    });
+    return toBanglaDigits(day) + ' ' + hijriMonthsBn[month - 1] + ' ' + toBanglaDigits(year) + ' হিজরি';
+  } catch (e) {
+    return 'হিজরি তারিখ অনুপলব্ধ';
+  }
+}
+
+function getEnglishDateString(d) {
+  return d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function getTimeWithSecondsString(d) {
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+}
+
+function updateDateTimeWidget() {
+  var now = new Date();
+  var timeEl = document.getElementById('tbDtTime');
+  var datesEl = document.getElementById('tbDtDates');
+  if (timeEl) timeEl.textContent = getTimeWithSecondsString(now);
+  if (datesEl) {
+    datesEl.innerHTML =
+      '<b>বাংলা:</b> ' + getBanglaDateString(now) +
+      ' &nbsp;·&nbsp; <b>Eng:</b> ' + getEnglishDateString(now) +
+      ' &nbsp;·&nbsp; <b>হিজরি:</b> ' + getHijriDateBangla(now);
+  }
+}
+
+function loadAll() {
+  loadProfile();
+  loadPatients();
+  loadAppointments();
+  loadTestRecords();
+  loadSettings();
+}
+
+function refreshAll() {
+  loadAll();
+  showToast('Refreshed!', 'ok');
+}
+
+// ═══════════════════════════════════════
+// LOAD: PROFILE
+// ═══════════════════════════════════════
+function loadProfile() {
+  call('getDoctorProfile', [], function(r) {
+    if (!r || !r.success) return;
+    D.profile = r.profile;
+    var p = r.profile;
+    var dn = 'Dr. ' + (p.DoctorName || 'Asma');
+    // Topbar
+    setText('tbDrName', dn);
+    setText('tbClinic', p.ClinicName || 'Doctor Dashboard');
+    // Avatar initials
+    var av = document.getElementById('tbAvatarLetter');
+    if (av) av.textContent = (p.DoctorName || 'D').charAt(0).toUpperCase();
+    // Overview greeting
+    setText('ovDrName', dn);
+    // Overview date
+    var ovDate = document.getElementById('ovDate');
+    if (ovDate) ovDate.textContent = new Date().toLocaleDateString('en-BD', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    var tdLabel = document.getElementById('todayDateLabel');
+    if (tdLabel) tdLabel.textContent = new Date().toLocaleDateString('en-BD', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    // Prefill settings form
+    fillSettingsForm(p);
+  });
+}
+
+// ═══════════════════════════════════════
+// LOAD: PATIENTS
+// ═══════════════════════════════════════
+function loadPatients() {
+  call('getPatientsData', [], function(r) {
+    if (!r || !r.success) return;
+    D.patients = r.patients || [];
+    LOADED.patients = true;
+    renderPatients();
+    renderRecentPatients();
+    renderFollowups();
+    updateStats();
+  });
+}
+
+// ═══════════════════════════════════════
+// LOAD: APPOINTMENTS
+// ═══════════════════════════════════════
+function loadAppointments() {
+  call('getAppointmentsData', [], function(r) {
+    if (!r || !r.success) return;
+    D.appointments = r.appointments || [];
+    LOADED.appts = true;
+    renderAppts();
+    renderTodaySchedule();
+    updateStats();
+  });
+}
+
+// ═══════════════════════════════════════
+// LOAD: TEST RECORDS
+// ═══════════════════════════════════════
+function loadTestRecords() {
+  call('getTestRecordsData', [], function(r) {
+    if (!r || !r.success) return;
+    D.testRecords = r.records || [];
+    LOADED.tests = true;
+    renderTestCards('Pending Approval');
+    updateStats();
+  });
+}
+
+// ═══════════════════════════════════════
+// LOAD: SETTINGS
+// ═══════════════════════════════════════
+function loadSettings() {
+  call('getSettingsData', [], function(r) {
+    if (!r || !r.success) return;
+    D.settings = r.settings || {};
+    D.categories = r.categories || [];
+    renderCategories();
+  });
+}
+
+// ═══════════════════════════════════════
+// UPDATE STATS
+// ═══════════════════════════════════════
+function updateStats() {
+  var today = new Date().toISOString().split('T')[0];
+  var todayAppts  = D.appointments.filter(function(a){ return a.date === today; });
+  var todayPend   = todayAppts.filter(function(a){ return a.status === 'Pending' || a.status === 'Confirmed'; });
+  var pendingTests = D.testRecords.filter(function(t){ return t.status === 'Pending Approval'; });
+
+  // Week range
+  var wd = new Date(); wd.setDate(wd.getDate() - wd.getDay());
+  var we = new Date(wd); we.setDate(we.getDate() + 6);
+  var weekAppts = D.appointments.filter(function(a){
+    var d = new Date(a.date || '');
+    return d >= wd && d <= we;
+  });
+  var completed = D.appointments.filter(function(a){ return a.status === 'Completed'; });
+
+  setText('ovToday',    todayAppts.length);
+  setText('ovTodayPend', todayPend.length + ' pending');
+  setText('ovPatients', D.patients.length);
+  setText('ovPending',  pendingTests.length);
+  setText('ovThisWeek', weekAppts.length);
+  setText('ovCompleted',completed.length);
+
+  // Sidebar badges
+  setText('sb-today-count',   todayAppts.length);
+  setText('sb-pending-count', pendingTests.length);
+
+  // ── v3.0: Notification Bell — count + dropdown ──
+  updateNotifBell(pendingTests, todayPend);
+
+  // Pending alert banner (Overview ট্যাবে)
+  var pal = document.getElementById('pendingAlert');
+  if (pal) {
+    pal.style.display = pendingTests.length > 0 ? 'flex' : 'none';
+    setText('pendingCount', pendingTests.length);
+  }
+}
+
+function updateNotifBell(pendingTests, todayPend) {
+  var totalNotif = pendingTests.length + todayPend.length;
+
+  var countEl = document.getElementById('notifCount');
+  if (countEl) {
+    countEl.textContent = totalNotif;
+    countEl.style.display = totalNotif > 0 ? 'flex' : 'none';
+  }
+
+  var body = document.getElementById('notifDropdownBody');
+  if (!body) return;
+
+  if (totalNotif === 0) {
+    body.innerHTML = '<div class="notif-dd-empty">🎉 কোনো পেন্ডিং নোটিফিকেশন নেই</div>';
+    return;
+  }
+
+  var html = '';
+  pendingTests.forEach(function(t) {
+    html += '<div class="notif-dd-item">' +
+      '<div class="ndi-title">🧪 টেস্ট অনুমোদনের অপেক্ষায়</div>' +
+      '<div class="ndi-sub">' + (t.patientName || t.patientId) + ' — ' + (t.testName || '') + '</div>' +
+    '</div>';
+  });
+  todayPend.forEach(function(a) {
+    html += '<div class="notif-dd-item">' +
+      '<div class="ndi-title">📅 আজকের অ্যাপয়েন্টমেন্ট (' + (a.status || '') + ')</div>' +
+      '<div class="ndi-sub">' + (a.patientName || a.patientId) + ' — ' + (a.timeSlot || '') + '</div>' +
+    '</div>';
+  });
+  body.innerHTML = html;
+}
+
+function toggleNotifDropdown(event) {
+  event.stopPropagation();
+  var dd = document.getElementById('notifDropdown');
+  if (dd) dd.classList.toggle('show');
+}
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('notifDropdown');
+  if (dd && dd.classList.contains('show') && !e.target.closest('.tb-notif')) {
+    dd.classList.remove('show');
+  }
+});
+
+// ═══════════════════════════════════════
+// RENDER: TODAY'S SCHEDULE
+// ═══════════════════════════════════════
+function renderTodaySchedule() {
+  var today = new Date().toISOString().split('T')[0];
+  var todayAppts = D.appointments
+    .filter(function(a){ return a.date === today; })
+    .sort(function(a,b){ return a.timeSlot > b.timeSlot ? 1 : -1; });
+
+  var el = document.getElementById('todayList');
+  var ovEl = document.getElementById('ovScheduleList');
+
+  if (!todayAppts.length) {
+    var emp = '<div class="empty"><div class="ei">📅</div><h4>No appointments today</h4><p>Enjoy your day!</p></div>';
+    if (el) el.innerHTML = emp;
+    if (ovEl) ovEl.innerHTML = emp;
+    return;
+  }
+
+  var html = todayAppts.map(function(a) {
+    return '<div class="sched-item">' +
+      '<div class="sched-time">' + (a.timeSlot || '—') + '</div>' +
+      '<div style="flex:1;">' +
+        '<div class="sched-name">' + (a.patientName || a.patientId || '—') + '</div>' +
+        '<div class="sched-reason">' + (a.reason || 'General') + '</div>' +
+      '</div>' +
+      mkBadge(a.status) +
+      '<div class="sched-actions">' +
+        '<button class="btn btn-ok btn-sm" onclick="quickStatus(\'' + a.appointmentId + '\',\'Completed\')">✓</button>' +
+        '<button class="btn btn-out btn-sm" onclick="editAppt(\'' + a.appointmentId + '\')">✏️</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  if (el) el.innerHTML = html;
+  if (ovEl) ovEl.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
+// RENDER: ALL APPOINTMENTS TABLE
+// ═══════════════════════════════════════
+function renderAppts() {
+  var q      = (document.getElementById('apptSearch')?.value || '').toLowerCase();
+  var status = document.getElementById('apptStatusFilter')?.value || '';
+  var date   = document.getElementById('apptDateFilter')?.value || '';
+
+  var filtered = D.appointments.filter(function(a) {
+    var matchQ = !q ||
+      (a.appointmentId || '').toLowerCase().includes(q) ||
+      (a.patientId     || '').toLowerCase().includes(q) ||
+      (a.patientName   || '').toLowerCase().includes(q) ||
+      (a.reason        || '').toLowerCase().includes(q);
+    var matchS = !status || a.status === status;
+    var matchD = !date   || a.date   === date;
+    return matchQ && matchS && matchD;
+  });
+
+  filtered.sort(function(a,b){ return (b.date+b.timeSlot) > (a.date+a.timeSlot) ? 1 : -1; });
+
+  var tb = document.getElementById('apptTable');
+  if (!tb) return;
+
+  if (!filtered.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="ei">🗓️</div><h4>No appointments found</h4></div></td></tr>';
+    return;
+  }
+
+  tb.innerHTML = filtered.map(function(a) {
+    return '<tr>' +
+      '<td><code style="font-size:11px;color:var(--ind2);">' + (a.appointmentId||'—') + '</code></td>' +
+      '<td>' +
+        '<div style="font-weight:600;">' + (a.patientName || a.patientId || '—') + '</div>' +
+        '<div style="font-size:11px;color:var(--sil2);">' + (a.patientId||'') + '</div>' +
+      '</td>' +
+      '<td>' + fmtDate(a.date) + '</td>' +
+      '<td style="color:var(--teal2);font-weight:600;">' + (a.timeSlot||'—') + '</td>' +
+      '<td style="color:var(--sil);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (a.reason||'—') + '</td>' +
+      '<td>' + mkBadge(a.status) + '</td>' +
+      '<td><div style="display:flex;gap:6px;">' +
+        '<button class="btn btn-ok  btn-sm" onclick="quickStatus(\'' + a.appointmentId + '\',\'Completed\')">✓ Done</button>' +
+        '<button class="btn btn-out btn-sm" onclick="editAppt(\'' + a.appointmentId + '\')">✏️</button>' +
+        '<button class="btn btn-err btn-sm" onclick="quickStatus(\'' + a.appointmentId + '\',\'Cancelled\')">✕</button>' +
+      '</div></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// RENDER: PATIENTS TABLE
+// ═══════════════════════════════════════
+function renderPatients() {
+  var q  = (document.getElementById('ptSearch')?.value || '').toLowerCase();
+  var gf = document.getElementById('ptGenderFilter')?.value || '';
+
+  var filtered = D.patients.filter(function(p) {
+    var mq = !q ||
+      (p.patientId || '').toLowerCase().includes(q) ||
+      (p.fullName  || '').toLowerCase().includes(q) ||
+      (p.phone     || '').toLowerCase().includes(q);
+    var mg = !gf || p.gender === gf;
+    return mq && mg;
+  });
+
+  var tb = document.getElementById('ptTable');
+  if (!tb) return;
+
+  if (!filtered.length) {
+    tb.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="ei">👩‍⚕️</div><h4>No patients found</h4></div></td></tr>';
+    return;
+  }
+
+  tb.innerHTML = filtered.map(function(p) {
+    return '<tr>' +
+      '<td><code style="font-size:11px;color:var(--rose2);">' + (p.patientId||'—') + '</code></td>' +
+      '<td>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<div class="pt-avatar" style="width:28px;height:28px;font-size:11px;">' + (p.fullName||'?').charAt(0) + '</div>' +
+          '<span>' + (p.fullName||'—') + '</span>' +
+        '</div>' +
+      '</td>' +
+      '<td style="color:var(--teal2);">' + (p.phone||'—') + '</td>' +
+      '<td>' + (p.age||'—') + '</td>' +
+      '<td>' + (p.gender ? '<span class="bdg bdg-rose">' + p.gender + '</span>' : '—') + '</td>' +
+      '<td style="color:var(--sil);">' + (p.lastVisit||'—') + '</td>' +
+      '<td style="font-size:11px;color:var(--sil2);">' + (p.email||'—') + '</td>' +
+      '<td><button class="btn btn-out btn-sm" onclick="viewPatient(\'' + p.patientId + '\')">👁️ View</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// RENDER: RECENT PATIENTS (overview)
+// ═══════════════════════════════════════
+function renderRecentPatients() {
+  var tb = document.getElementById('ovRecentPt');
+  if (!tb) return;
+  var recent = D.patients.slice(-8).reverse();
+  if (!recent.length) {
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="ei">👩‍⚕️</div><h4>No patients yet</h4></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = recent.map(function(p) {
+    return '<tr>' +
+      '<td>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<div class="pt-avatar" style="width:28px;height:28px;font-size:11px;">' + (p.fullName||'?').charAt(0) + '</div>' +
+          (p.fullName||'—') +
+        '</div>' +
+      '</td>' +
+      '<td><code style="font-size:11px;color:var(--rose2);">' + (p.patientId||'—') + '</code></td>' +
+      '<td style="color:var(--teal2);">' + (p.phone||'—') + '</td>' +
+      '<td style="color:var(--sil);">' + (p.lastVisit||'—') + '</td>' +
+      '<td><span class="bdg bdg-conf">Active</span></td>' +
+      '<td><button class="btn btn-out btn-sm" onclick="viewPatient(\'' + p.patientId + '\')">View</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// RENDER: TEST APPROVAL CARDS
+// ═══════════════════════════════════════
+var _testFilter = 'Pending Approval';
+function setTestFilter(f, btn) {
+  _testFilter = f;
+  document.querySelectorAll('[id^="tFilter-"]').forEach(function(b){ b.className = 'btn btn-out'; });
+  if (btn) btn.className = 'btn btn-rose';
+  renderTestCards(f);
+}
+function renderTestCards(filterStatus) {
+  var filtered = D.testRecords.filter(function(t) {
+    return !filterStatus || t.status === filterStatus;
+  });
+  filtered.sort(function(a,b){ return a.status === 'Pending Approval' ? -1 : 1; });
+
+  var el = document.getElementById('testCardsList');
+  if (!el) return;
+
+  // Also update overview pending
+  var ovEl = document.getElementById('ovPendingList');
+
+  if (!filtered.length) {
+    var emp = '<div class="empty"><div class="ei">✅</div><h4>All clear!</h4><p>No records in this category.</p></div>';
+    el.innerHTML = emp;
+    if (ovEl && filterStatus === 'Pending Approval') ovEl.innerHTML = emp;
+    return;
+  }
+
+  var html = filtered.map(function(t) {
+    var isPend = t.status === 'Pending Approval';
+    return '<div class="upload-card">' +
+      '<div class="upload-card-hd">' +
+        '<div>' +
+          '<div class="upload-card-name">🧪 ' + (t.testName||'Test') + ' — ' +
+            '<code style="font-size:11px;color:var(--rose2);">' + (t.patientId||'—') + '</code>' +
+          '</div>' +
+          '<div class="upload-card-meta">' +
+            'Date: ' + fmtDate(t.testDate) + ' · By: ' + (t.uploadedBy||'—') + ' · ' + mkBadge(t.status) +
+          '</div>' +
+          (t.fileLink ? '<a href="' + t.fileLink + '" target="_blank" style="font-size:12px;color:var(--teal2);text-decoration:none;margin-top:4px;display:inline-block;">📎 View File →</a>' : '') +
+        '</div>' +
+        '<div class="upload-card-actions">' +
+          (isPend ?
+            '<button class="btn btn-ok btn-sm" onclick="approveTest(\'' + t.recordId + '\')">✓ Approve</button>' +
+            '<button class="btn btn-err btn-sm" onclick="rejectTest(\'' + t.recordId + '\')">✕ Reject</button>' :
+            '<span class="bdg bdg-comp">Approved</span>'
+          ) +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  el.innerHTML = html;
+
+  // Overview pending (top 3)
+  if (ovEl) {
+    var pend3 = D.testRecords.filter(function(t){ return t.status === 'Pending Approval'; }).slice(0,3);
+    if (!pend3.length) {
+      ovEl.innerHTML = '<div class="empty"><div class="ei">✅</div><p>No pending approvals.</p></div>';
+    } else {
+      ovEl.innerHTML = pend3.map(function(t) {
+        return '<div class="upload-card" style="margin-bottom:8px;">' +
+          '<div class="upload-card-hd">' +
+            '<div>' +
+              '<div class="upload-card-name">🧪 ' + (t.testName||'Test') + '</div>' +
+              '<div class="upload-card-meta"><code style="font-size:11px;color:var(--rose2);">' + (t.patientId||'—') + '</code> · ' + fmtDate(t.testDate) + '</div>' +
+            '</div>' +
+            '<div class="upload-card-actions">' +
+              '<button class="btn btn-ok btn-sm" onclick="approveTest(\'' + t.recordId + '\')">✓</button>' +
+              '<button class="btn btn-err btn-sm" onclick="rejectTest(\'' + t.recordId + '\')">✕</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDER: FOLLOW-UPS
+// ═══════════════════════════════════════
+function renderFollowups() {
+  var now = new Date();
+  // Patients whose last completed appointment was 7-30 days ago
+  var queue = [];
+  D.patients.forEach(function(p) {
+    if (!p.email) return; // need email to follow up
+    var completedAppts = D.appointments.filter(function(a){
+      return a.patientId === p.patientId && a.status === 'Completed';
+    });
+    if (!completedAppts.length) return;
+    completedAppts.sort(function(a,b){ return b.date > a.date ? 1 : -1; });
+    var lastDate = new Date(completedAppts[0].date);
+    var daysDiff = Math.floor((now - lastDate) / 86400000);
+    if (daysDiff >= 1 && daysDiff <= 30) {
+      queue.push({ patient: p, lastVisit: completedAppts[0].date, days: daysDiff });
+    }
+  });
+
+  var tb = document.getElementById('followupTable');
+  if (!tb) return;
+
+  if (!queue.length) {
+    tb.innerHTML = '<tr><td colspan="5"><div class="empty"><div class="ei">💌</div><h4>No follow-ups needed</h4><p>Patients with recent completed visits will appear here.</p></div></td></tr>';
+    return;
+  }
+
+  tb.innerHTML = queue.map(function(item) {
+    var urgency = item.days <= 2 ? 'bdg-rose' : (item.days <= 7 ? 'bdg-warn' : 'bdg-comp');
+    return '<tr>' +
+      '<td>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<div class="pt-avatar" style="width:28px;height:28px;font-size:11px;">' + (item.patient.fullName||'?').charAt(0) + '</div>' +
+          item.patient.fullName +
+        '</div>' +
+      '</td>' +
+      '<td style="color:var(--sil);">' + fmtDate(item.lastVisit) + '</td>' +
+      '<td><span class="bdg ' + urgency + '">' + item.days + ' days ago</span></td>' +
+      '<td style="font-size:12px;color:var(--teal2);">' + (item.patient.email||'—') + '</td>' +
+      '<td>' +
+        '<button class="btn btn-ind btn-sm" onclick="sendFollowUp(\'' + item.patient.patientId + '\',\'' + item.lastVisit + '\')">📧 Send</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// RENDER: SETTINGS FORM
+// ═══════════════════════════════════════
+function fillSettingsForm(p) {
+  setVal('sDrName',    p.DoctorName     || '');
+  setVal('sClinicName',p.ClinicName     || '');
+  setVal('sSpecialty', p.Specialty      || '');
+  setVal('sDegree',    p.Degree         || '');
+  setVal('sPhone',     p.ContactPhone   || '');
+  setVal('sEmail',     p.ContactEmail   || '');
+  setVal('sAddress',   p.ClinicAddress  || '');
+  setVal('sBio',       p.Bio            || '');
+  setVal('sWorkingDays',p.WorkingDays   || 'Sat,Sun,Mon,Tue,Wed');
+  setVal('sSlotDur',   p.SlotDuration   || '20');
+  setVal('sOpenTime',  p.OpeningTime    || '09:00');
+  setVal('sCloseTime', p.ClosingTime    || '20:00');
+  setVal('sWebsiteURL',p.WebsiteURL     || '');
+  setVal('sWaNumber',  p.WhatsAppNumber || '');
+  setVal('sYearsExp',  p.YearsExperience|| '');
+  setVal('sPhotoURL',  p.PhotoURL       || '');
+}
+
+function renderCategories() {
+  var el = document.getElementById('catList');
+  if (!el) return;
+  var testCats = D.categories.filter(function(c){ return c.group === 'TestName' && c.active; });
+  if (!testCats.length) {
+    el.innerHTML = '<span style="font-size:13px;color:var(--sil2);">No categories yet. Add one below.</span>';
+    return;
+  }
+  el.innerHTML = testCats.map(function(c) {
+    return '<span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.25);border-radius:20px;font-size:12px;color:var(--teal2);">' +
+      c.value +
+      '<button onclick="removeCategory(\'' + c.value + '\')" style="background:none;border:none;color:var(--sil2);cursor:pointer;font-size:13px;line-height:1;padding:0 0 0 4px;" title="Remove">×</button>' +
+    '</span>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// ACTIONS: APPOINTMENT
+// ═══════════════════════════════════════
+function openAddAppt() {
+  clearModal('apptModal');
+  document.getElementById('apptModalTitle').textContent = 'New Appointment';
+  var today = new Date().toISOString().split('T')[0];
+  setVal('mApptDate', today);
+  setVal('mApptStatus', 'Pending');
+  openModal('apptModal');
+}
+
+function editAppt(id) {
+  var a = D.appointments.find(function(x){ return x.appointmentId === id; });
+  if (!a) return;
+  document.getElementById('apptModalTitle').textContent = 'Edit Appointment';
+  setVal('mApptPid',    a.patientId || '');
+  setVal('mApptName',   a.patientName || '');
+  setVal('mApptPhone',  a.phone || '');
+  setVal('mApptDate',   a.date || '');
+  setVal('mApptTime',   a.timeSlot || '');
+  setVal('mApptStatus', a.status || 'Pending');
+  setVal('mApptReason', a.reason || '');
+  setVal('mApptEditId', id);
+  openModal('apptModal');
+}
+
+function saveAppt() {
+  var editId   = getVal('mApptEditId');
+  var patName  = getVal('mApptName').trim();
+  var phone    = getVal('mApptPhone').trim();
+  var date     = getVal('mApptDate');
+  var time     = getVal('mApptTime').trim();
+
+  if (!patName || !phone || !date || !time) {
+    showAl('apptModalMsg', 'err', 'Name, phone, date, and time are required.');
+    return;
+  }
+
+  var btn = document.getElementById('apptSaveBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Saving...';
+
+  var data = {
+    patientId:  getVal('mApptPid').trim() || '',
+    patientName: patName,
+    phone:      phone,
+    date:       date,
+    timeSlot:   time,
+    status:     getVal('mApptStatus'),
+    reason:     getVal('mApptReason'),
+    editId:     editId
+  };
+
+  call('saveAppointmentData', [data], function(r) {
+    btn.disabled = false; btn.innerHTML = 'Save Appointment';
+    if (r && r.success) {
+      closeModal('apptModal');
+      showToast('Appointment saved!', 'ok');
+      loadAppointments();
+    } else {
+      showAl('apptModalMsg', 'err', (r && r.error) || 'Save failed.');
+    }
+  });
+}
+
+function quickStatus(id, status) {
+  call('updateAppointmentStatus', [id, status], function(r) {
+    if (r && r.success) {
+      showToast('Status → ' + status, 'ok');
+      loadAppointments();
+    } else {
+      showToast('Update failed', 'err');
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// ACTIONS: PATIENT
+// ═══════════════════════════════════════
+function openAddPatient() {
+  clearModal('ptModal');
+  openModal('ptModal');
+}
+
+function savePatient() {
+  var name  = getVal('mPtName').trim();
+  var phone = getVal('mPtPhone').trim();
+  if (!name || !phone) { showAl('ptModalMsg','err','Name and phone are required.'); return; }
+
+  call('savePatientData', [{
+    fullName: name, phone: phone,
+    age: getVal('mPtAge'), gender: getVal('mPtGender'),
+    email: getVal('mPtEmail'), address: getVal('mPtAddr'),
+    notes: getVal('mPtNotes')
+  }], function(r) {
+    if (r && r.success) {
+      closeModal('ptModal');
+      showToast('Patient registered! ID: ' + (r.patientId||''), 'ok');
+      loadPatients();
+    } else {
+      showAl('ptModalMsg','err',(r&&r.error)||'Save failed.');
+    }
+  });
+}
+
+function viewPatient(pid) {
+  var p = D.patients.find(function(x){ return x.patientId === pid; });
+  if (!p) return;
+
+  var appts = D.appointments.filter(function(a){ return a.patientId === pid; });
+  var tests = D.testRecords.filter(function(t){ return t.patientId === pid && t.status === 'Approved'; });
+
+  document.getElementById('ptDetailName').textContent = p.fullName || 'Patient';
+  document.getElementById('ptDetailBody').innerHTML =
+    '<div class="form-grid g2" style="margin-bottom:20px;">' +
+      '<div class="fg"><span class="fl">Patient ID</span><div style="color:var(--rose2);font-weight:700;font-size:15px;">' + p.patientId + '</div></div>' +
+      '<div class="fg"><span class="fl">Phone</span><div style="color:var(--teal2);">' + (p.phone||'—') + '</div></div>' +
+      '<div class="fg"><span class="fl">Age</span><div>' + (p.age||'—') + '</div></div>' +
+      '<div class="fg"><span class="fl">Gender</span><div>' + (p.gender||'—') + '</div></div>' +
+      '<div class="fg"><span class="fl">Email</span><div style="font-size:13px;color:var(--sil);">' + (p.email||'—') + '</div></div>' +
+      '<div class="fg"><span class="fl">Last Visit</span><div style="color:var(--sil);">' + (p.lastVisit||'—') + '</div></div>' +
+      (p.notes ? '<div class="fg" style="grid-column:1/-1;"><span class="fl">Notes</span><div class="quick-note">' + p.notes + '</div></div>' : '') +
+    '</div>' +
+    '<h4 style="font-family:Syne,sans-serif;font-size:14px;margin-bottom:10px;color:var(--sil);">RECENT APPOINTMENTS</h4>' +
+    '<div style="font-size:13px;color:var(--sil);">' +
+      (!appts.length ? '<div class="empty" style="padding:20px;"><div class="ei">📅</div><p>No appointments</p></div>' :
+        appts.slice(0,5).map(function(a){
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd);">' +
+            '<span>' + fmtDate(a.date) + ' ' + (a.timeSlot||'') + '</span>' +
+            '<span style="color:var(--sil2);">' + (a.reason||'—') + '</span>' +
+            mkBadge(a.status) +
+          '</div>';
+        }).join('')
+      ) +
+    '</div>' +
+    '<h4 style="font-family:Syne,sans-serif;font-size:14px;margin:16px 0 10px;color:var(--sil);">APPROVED TESTS</h4>' +
+    '<div style="font-size:13px;color:var(--sil);">' +
+      (!tests.length ? '<p style="color:var(--sil2);">No approved tests.</p>' :
+        tests.map(function(t){
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd);">' +
+            '<span>' + (t.testName||'—') + '</span>' +
+            '<span style="color:var(--sil2);">' + fmtDate(t.testDate) + '</span>' +
+            (t.fileLink ? '<a href="' + t.fileLink + '" target="_blank" style="font-size:12px;color:var(--teal2);text-decoration:none;">📎 View</a>' : '') +
+          '</div>';
+        }).join('')
+      ) +
+    '</div>';
+
+  openModal('ptDetailModal');
+}
+
+// ═══════════════════════════════════════
+// ACTIONS: TEST RECORDS — FILE UPLOAD
+// ═══════════════════════════════════════
+var _testFile = null; // selected file object
+
+function openAddTest() {
+  clearModal('testModal');
+  _testFile = null;
+  resetTestUploadZone();
+  setVal('mTstDate', new Date().toISOString().split('T')[0]);
+  setVal('mTstStatus', 'Approved');
+  setVal('mTstApprBy', 'Dr. ' + (D.profile.DoctorName || 'Asma'));
+  setVal('mTstBy', 'Clinic Staff');
+  openModal('testModal');
+}
+
+function resetTestUploadZone() {
+  _testFile = null;
+  var iz = document.getElementById('testUploadIcon');
+  var zt = document.getElementById('testUploadText');
+  var fp = document.getElementById('testFilePreview');
+  var pr = document.getElementById('testUploadProgress');
+  var iz2= document.getElementById('testImgPreviewWrap');
+  var fi = document.getElementById('mTstFileInput');
+  if (iz)  iz.textContent = '📷';
+  if (zt)  zt.style.display = 'block';
+  if (fp)  fp.style.display = 'none';
+  if (iz2) iz2.style.display = 'none';
+  if (pr)  pr.style.display = 'none';
+  if (fi)  fi.value = '';
+  var zone = document.getElementById('testUploadZone');
+  if (zone) zone.style.borderColor = 'rgba(14,165,233,0.4)';
+  var btn = document.getElementById('testSaveBtn');
+  if (btn) { btn.disabled = false; btn.innerHTML = '📤 Upload & Save Record'; }
+}
+
+function handleTestFileSelect(input) {
+  if (!input.files || !input.files[0]) return;
+  processTestFile(input.files[0]);
+}
+
+function handleTestFileDrop(event) {
+  event.preventDefault();
+  var zone = document.getElementById('testUploadZone');
+  if (zone) zone.style.borderColor = 'rgba(14,165,233,0.4)';
+  var files = event.dataTransfer.files;
+  if (files && files[0]) processTestFile(files[0]);
+}
+
+function processTestFile(file) {
+  // Validate type
+  var allowed = ['application/pdf','image/jpeg','image/png','image/webp','image/heic'];
+  if (file.type && allowed.indexOf(file.type) === -1 &&
+      !file.name.match(/\.(pdf|jpg|jpeg|png|webp|heic)$/i)) {
+    showAl('testModalMsg','err','Only PDF, JPG, PNG, HEIC files are allowed.');
+    return;
+  }
+  // Validate size — 10MB
+  if (file.size > 10 * 1024 * 1024) {
+    showAl('testModalMsg','err','File is too large. Maximum allowed size is 10MB.');
+    return;
+  }
+
+  _testFile = file;
+
+  // Show file info
+  var zt  = document.getElementById('testUploadText');
+  var fp  = document.getElementById('testFilePreview');
+  var fn  = document.getElementById('testFileName');
+  var fs  = document.getElementById('testFileSize');
+  var fi2 = document.getElementById('testFileIcon');
+  var ip  = document.getElementById('testImgPreviewWrap');
+
+  if (zt) zt.style.display = 'none';
+  if (fp) fp.style.display = 'block';
+  if (fn) fn.textContent = file.name;
+  if (fs) fs.textContent = (file.size / 1024 < 1024)
+    ? Math.round(file.size/1024) + ' KB'
+    : (file.size/1048576).toFixed(1) + ' MB';
+
+  // Icon by type
+  var isImg = file.type.indexOf('image') !== -1;
+  if (fi2) fi2.textContent = isImg ? '🖼️' : '📄';
+
+  // Image preview
+  if (isImg && ip) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var imgEl = document.getElementById('testImgPreview');
+      if (imgEl) imgEl.src = e.target.result;
+      ip.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Update zone border
+  var zone = document.getElementById('testUploadZone');
+  if (zone) zone.style.borderColor = 'rgba(20,184,166,0.5)';
+}
+
+function clearTestFile(event) {
+  event.stopPropagation();
+  resetTestUploadZone();
+}
+
+function setTestProgress(text, pct) {
+  var pr = document.getElementById('testUploadProgress');
+  var pt = document.getElementById('testUploadProgressText');
+  var pf = document.getElementById('testProgFill');
+  if (pr) pr.style.display = 'block';
+  if (pt) pt.textContent = text;
+  if (pf) pf.style.width = pct + '%';
+}
+
+function saveTest() {
+  var pid  = getVal('mTstPid').trim();
+  var name = getVal('mTstName');
+  var date = getVal('mTstDate');
+
+  if (!pid)  { showAl('testModalMsg','err','Patient ID is required.'); return; }
+  if (!name) { showAl('testModalMsg','err','Please select a test type.'); return; }
+  if (!date) { showAl('testModalMsg','err','Test date is required.'); return; }
+  if (!_testFile) { showAl('testModalMsg','err','Please select a scan or report file to upload.'); return; }
+
+  var btn = document.getElementById('testSaveBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Uploading...'; }
+  document.getElementById('testModalMsg').innerHTML = '';
+
+  setTestProgress('Reading file...', 10);
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    setTestProgress('Uploading to Google Drive...', 40);
+
+    var base64 = e.target.result;
+    call('clinicStaffUpload', [
+      pid,
+      base64,
+      _testFile.type || 'application/octet-stream',
+      _testFile.name,
+      name,
+      getVal('mTstDate'),
+      getVal('mTstStatus'),
+      getVal('mTstApprBy') || ('Dr. ' + (D.profile.DoctorName || 'Asma')),
+      getVal('mTstBy') || 'Clinic Staff',
+      getVal('mTstRemarks')
+    ],
+    function(r) {
+      setTestProgress('Saving record...', 85);
+      if (btn) { btn.disabled = false; btn.innerHTML = '📤 Upload & Save Record'; }
+      var pr = document.getElementById('testUploadProgress');
+      if (pr) pr.style.display = 'none';
+
+      if (r && r.success) {
+        closeModal('testModal');
+        showToast('✅ Test record uploaded & saved! Record ID: ' + r.recordId, 'ok');
+        loadTestRecords();
+      } else {
+        showAl('testModalMsg','err', '❌ ' + ((r && r.error) || 'Upload failed. Please try again.'));
+      }
+    },
+    function(err) {
+      if (btn) { btn.disabled = false; btn.innerHTML = '📤 Upload & Save Record'; }
+      var pr = document.getElementById('testUploadProgress');
+      if (pr) pr.style.display = 'none';
+      showAl('testModalMsg','err','Connection error: ' + (err.message || 'Please try again.'));
+    });
+  };
+
+  reader.onerror = function() {
+    if (btn) { btn.disabled = false; btn.innerHTML = '📤 Upload & Save Record'; }
+    showAl('testModalMsg','err','Could not read the file. Please try again.');
+  };
+
+  reader.readAsDataURL(_testFile);
+}
+
+function approveTest(id) {
+  var dn = (D.profile.DoctorName || 'Dr. Asma');
+  call('approveTestRecord', [id, dn], function(r) {
+    if (r && r.success) {
+      showToast('Test approved! Patient can now view it.', 'ok');
+      loadTestRecords();
+    } else {
+      showToast((r&&r.error)||'Approval failed.', 'err');
+    }
+  });
+}
+
+function rejectTest(id) {
+  if (!confirm('Reject this test record? It will remain as Pending.')) return;
+  showToast('Record not changed — rejection noted.', 'warn');
+}
+
+// ═══════════════════════════════════════
+// ACTIONS: FOLLOW-UP & EMAIL
+// ═══════════════════════════════════════
+function sendFollowUp(patientId, visitDate) {
+  var p = D.patients.find(function(x){ return x.patientId === patientId; });
+  if (!p || !p.email) { showToast('No email address for this patient.', 'warn'); return; }
+
+  call('sendFollowUpEmailFromDashboard', [p.email, p.fullName, p.patientId, visitDate, '', ''],
+    function(r) {
+      showToast('Follow-up email sent to ' + p.email, 'ok');
+    },
+    function(err) { showToast('Email failed: ' + err.message, 'err'); }
+  );
+}
+
+function triggerFollowUpEmails() {
+  if (!confirm('Send follow-up emails to all eligible patients? This cannot be undone.')) return;
+  showToast('Sending follow-up emails...', 'info');
+  call('runFollowUpEmailBatch', [], function(r) {
+    showToast((r&&r.message)||'Follow-up emails sent!', 'ok');
+  });
+}
+
+// ═══════════════════════════════════════
+// ACTIONS: SETTINGS
+// ═══════════════════════════════════════
+function saveSettings() {
+  var data = {
+    DoctorName:     getVal('sDrName'),
+    ClinicName:     getVal('sClinicName'),
+    Specialty:      getVal('sSpecialty'),
+    Degree:         getVal('sDegree'),
+    ContactPhone:   getVal('sPhone'),
+    ContactEmail:   getVal('sEmail'),
+    ClinicAddress:  getVal('sAddress'),
+    Bio:            getVal('sBio'),
+    WorkingDays:    getVal('sWorkingDays'),
+    SlotDuration:   getVal('sSlotDur'),
+    OpeningTime:    getVal('sOpenTime'),
+    ClosingTime:    getVal('sCloseTime'),
+    WebsiteURL:     getVal('sWebsiteURL'),
+    WhatsAppNumber: getVal('sWaNumber'),
+    YearsExperience:getVal('sYearsExp'),
+    PhotoURL:       getVal('sPhotoURL')
+  };
+
+  call('saveDoctorProfile', [data], function(r) {
+    if (r && r.success) {
+      showAl('settingsMsg', 'ok', '✅ Settings saved successfully! Refresh the public website to see changes.');
+      showToast('Settings saved!', 'ok');
+      loadProfile();
+    } else {
+      showAl('settingsMsg', 'err', '❌ ' + ((r&&r.error)||'Save failed.'));
+    }
+  });
+}
+
+function addCategory() {
+  var val = getVal('newCatVal').trim();
+  if (!val) return;
+  call('addCategoryValue', ['TestName', val], function(r) {
+    if (r && r.success) {
+      setVal('newCatVal', '');
+      showToast('Category added!', 'ok');
+      loadSettings();
+    }
+  });
+}
+
+function removeCategory(val) {
+  call('removeCategoryValue', ['TestName', val], function(r) {
+    if (r && r.success) { showToast('Removed: ' + val, 'ok'); loadSettings(); }
+  });
+}
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function navTo(tab, btn) {
+  // Hide all pages
+  document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); });
+  // Show target
+  var pg = document.getElementById('pg-' + tab);
+  if (pg) pg.classList.add('active');
+  // Update sidebar
+  document.querySelectorAll('.sb-item').forEach(function(b){ b.classList.remove('active','rose-active'); });
+  if (btn) {
+    var isRose = ['today','patients','pending'].includes(tab);
+    btn.classList.add(isRose ? 'rose-active' : 'active');
+  }
+  // Update mobile nav
+  document.querySelectorAll('.mob-nav-item').forEach(function(b){
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  // Scroll to top
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+// ═══════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function clearModal(id){
+  var m = document.getElementById(id);
+  if (!m) return;
+  m.querySelectorAll('input,select,textarea').forEach(function(el){ el.value = ''; });
+  m.querySelectorAll('[id$="Msg"]').forEach(function(el){ el.innerHTML = ''; });
+}
+// Close modal on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(function(m){
+  m.addEventListener('click', function(e){ if(e.target === m) m.classList.remove('show'); });
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay').forEach(function(m){ m.classList.remove('show'); });
+});
+
+// ═══════════════════════════════════════
+// TOAST NOTIFICATION
+// ═══════════════════════════════════════
+function showToast(msg, type) {
+  var existing = document.getElementById('toast-el');
+  if (existing) existing.remove();
+  var colors = { ok:'#22C55E', err:'#EF4444', warn:'#F59E0B', info:'var(--ind2)' };
+  var t = document.createElement('div');
+  t.id = 'toast-el';
+  t.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:9999;padding:12px 20px;background:var(--bg2);border:1px solid ' + (colors[type]||'var(--bd)') + ';border-radius:10px;font-size:13px;font-weight:600;color:' + (colors[type]||'var(--wht)') + ';box-shadow:0 8px 24px rgba(0,0,0,0.3);max-width:320px;animation:toastIn 0.3s ease;';
+  t.textContent = msg;
+  var style = document.createElement('style');
+  style.textContent = '@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(t);
+  setTimeout(function(){ if(t.parentNode) t.remove(); }, 3500);
+}
+
+// ═══════════════════════════════════════
+// ALERT HELPER
+// ═══════════════════════════════════════
+function showAl(id, type, msg) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var cls = { ok:'al-ok', err:'al-err', inf:'al-inf', warn:'al-warn' };
+  el.innerHTML = '<div class="al ' + (cls[type]||'al-inf') + '">' + msg + '</div>';
+}
+
+// ═══════════════════════════════════════
+// DOM UTILITIES
+// ═══════════════════════════════════════
+function setText(id, val) { var el=document.getElementById(id); if(el) el.textContent = val; }
+function setVal(id, val)  { var el=document.getElementById(id); if(el) el.value = val; }
+function getVal(id)       { var el=document.getElementById(id); return el ? el.value : ''; }
+
+function mkBadge(s) {
+  var map = { Pending:'bdg-pend', Confirmed:'bdg-conf', Completed:'bdg-comp', Cancelled:'bdg-canc', Approved:'bdg-appr', 'Pending Approval':'bdg-pend' };
+  return '<span class="bdg ' + (map[s]||'bdg-pend') + '">' + (s||'—') + '</span>';
+}
+
+function fmtDate(s) {
+  if (!s) return '—';
+  try {
+    var d = new Date(s);
+    return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear();
+  } catch(e) { return String(s); }
+}
+</script>
+</body>
+</html>
