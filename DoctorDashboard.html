@@ -1357,6 +1357,32 @@ var LOADED = { profile:false, patients:false, appts:false, tests:false };
 var _session = { token: null, role: null };
 var _selectedRole = 'DOCTOR';
 
+// ── v2.1: localStorage থেকে পুরনো session পড়ে নেওয়ার চেষ্টা ──
+function loadSessionFromStorage() {
+  try {
+    var saved = localStorage.getItem('aumatiq_session');
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      if (parsed && parsed.token) return parsed;
+    }
+  } catch (e) {}
+  return null;
+}
+function saveSessionToStorage(token, role) {
+  try {
+    localStorage.setItem('aumatiq_session', JSON.stringify({ token: token, role: role }));
+  } catch (e) {}
+}
+function clearSessionStorage() {
+  try { localStorage.removeItem('aumatiq_session'); } catch (e) {}
+}
+function saveActiveTab(tab) {
+  try { localStorage.setItem('aumatiq_active_tab', tab); } catch (e) {}
+}
+function getActiveTab() {
+  try { return localStorage.getItem('aumatiq_active_tab') || 'overview'; } catch (e) { return 'overview'; }
+}
+
 function selectRole(role) {
   _selectedRole = role;
   document.getElementById('role-btn-doctor').classList.toggle('active', role === 'DOCTOR');
@@ -1388,6 +1414,7 @@ function doLogin() {
       if (result.success) {
         _session.token = result.token;
         _session.role  = result.role;
+        saveSessionToStorage(result.token, result.role);   // ← নতুন
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
         // Assistant হলে Settings sidebar item লুকানো (Finance এই ভার্সনে নেই)
@@ -1395,6 +1422,9 @@ function doLogin() {
           document.querySelectorAll('.doctor-only').forEach(function(el){ el.style.display = 'none'; });
         }
         loadAll();
+        var savedTab = getActiveTab();                     // ← নতুন: শেষ ট্যাব ফিরিয়ে আনা
+        var savedBtn = document.querySelector('.sb-item[onclick*="\'' + savedTab + '\'"]');
+        navTo(savedTab, savedBtn);
       } else {
         errEl.textContent = result.message || 'Login failed.';
         errEl.style.display = 'block';
@@ -1413,6 +1443,7 @@ function doLogout() {
   if (!confirm('লগআউট করতে চাও?')) return;
   google.script.run.logout(_session.token);
   _session = { token: null, role: null };
+  clearSessionStorage();       // ← নতুন
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-pass').value = '';
@@ -1446,7 +1477,35 @@ window.addEventListener('DOMContentLoaded', function() {
   var mTstDate = document.getElementById('mTstDate');
   if (mTstDate) mTstDate.value = today;
 
-  // v3.0: লগইন হওয়ার আগে dashboard ডেটা লোড হবে না — loadAll() এখন doLogin() success-এর পর কল হয়
+  // ── v2.1: Refresh/reopen করলে আগের session থাকলে সরাসরি dashboard-এ ঢুকে যাওয়া ──
+  var saved = loadSessionFromStorage();
+  if (saved) {
+    google.script.run
+      .withSuccessHandler(function(result) {
+        if (result.valid) {
+          _session.token = saved.token;
+          _session.role  = saved.role;
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('main-app').style.display = 'block';
+          if (_session.role !== 'DOCTOR') {
+            document.querySelectorAll('.doctor-only').forEach(function(el){ el.style.display = 'none'; });
+          }
+          loadAll();
+          var savedTab = getActiveTab();
+          var savedBtn = document.querySelector('.sb-item[onclick*="\'' + savedTab + '\'"]');
+          navTo(savedTab, savedBtn);
+        } else {
+          // ১৫ মিনিট idle থেকে session expire হয়ে গেছে
+          clearSessionStorage();
+          document.getElementById('login-screen').style.display = 'flex';
+        }
+      })
+      .withFailureHandler(function() {
+        clearSessionStorage();
+        document.getElementById('login-screen').style.display = 'flex';
+      })
+      .validateSession(saved.token);
+  }
 });
 
 // ═══════════════════════════════════════
@@ -2460,6 +2519,7 @@ function removeCategory(val) {
 // NAV
 // ═══════════════════════════════════════
 function navTo(tab, btn) {
+  saveActiveTab(tab);   // ← নতুন: এই ট্যাব মনে রাখা, refresh-এর পর একই জায়গায় ফেরত আসবে
   // Hide all pages
   document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); });
   // Show target

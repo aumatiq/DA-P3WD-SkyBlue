@@ -1,17 +1,17 @@
 /**
  * AUMATIQ — Doctor & Clinic Automation System
- * Part 2: Login + Security System (Auth.gs) — v2.0
+ * Part 2: Login + Security System (Auth.gs) — v2.1
  * ─────────────────────────────────────────────
- * v2.0 বদল:
- *  - Doctor/Assistant Login এখন Username লাগে না — শুধু Role বাছাই (বাটনে ক্লিক) + Password।
- *  - changePassword() যোগ করা হলো (আগে এই function ছিলই না — Password Management UI কাজ করত না)।
- *  - পুরনো ডুপ্লিকেট patientLogin() ফাংশন সরানো হলো (Code.gs-এর patientPortalLogin()
- *    ব্যবহার হয়, patientLogin() কোথাও call হতো না — dead code ছিল)।
- * Patient login, এবং session token validation অপরিবর্তিত।
+ * v2.1 বদল (Phase 1 — Security & Session Fix):
+ *  - SESSION_DURATION_MINUTES: 120 → 15 (তোমার চাওয়া অনুযায়ী)
+ *  - validateSession() এখন "sliding expiration" করে — মানে active
+ *    থাকা অবস্থায় প্রতিবার কল হলে ১৫ মিনিট নতুন করে শুরু হয়। শুধু
+ *    ১৫ মিনিট কিছুই না করলে (idle) মেয়াদ শেষ হবে।
+ * v2.0-এর বাকি সব অপরিবর্তিত।
  */
 
 // ───────────────────────── কনফিগ ─────────────────────────
-const SESSION_DURATION_MINUTES = 120; // লগইন token কতক্ষণ valid থাকবে (২ ঘণ্টা)
+const SESSION_DURATION_MINUTES = 15; // লগইন token কতক্ষণ valid থাকবে (১৫ মিনিট, sliding)
 
 // ───────────────────────── হেল্পার: Settings Tab থেকে ভ্যালু পড়া ─────────────────────────
 function getSettingValue(fieldName) {
@@ -26,13 +26,6 @@ function getSettingValue(fieldName) {
 }
 
 // ───────────────────────── ROLE LOGIN (Doctor বা Assistant — Password-only) ─────────────────────────
-/**
- * v2.0: Username লাগে না। Login screen-এ Doctor / Assistant বাটনে ক্লিক করে
- * role বাছাই করা হয়, তারপর শুধু সেই role-এর Password দিলেই লগইন হয়ে যায়।
- * role আভ্যন্তরীণভাবে এখনো "DOCTOR" / "RECEPTIONIST" — বাকি সব guard function
- * (requireDoctor, requireDoctorOrReceptionist ইত্যাদি) অপরিবর্তিত রাখার জন্য।
- * UI-তে "RECEPTIONIST"-কে "Assistant" হিসেবে দেখানো হয়।
- */
 function roleLogin(role, password) {
   const validRoles = ["DOCTOR", "RECEPTIONIST"];
 
@@ -72,12 +65,6 @@ function roleLogin(role, password) {
 }
 
 // ───────────────────────── PASSWORD পরিবর্তন (শুধু Doctor করতে পারবে) ─────────────────────────
-/**
- * roleToChange: "DOCTOR" অথবা "RECEPTIONIST" — কার password বদলানো হচ্ছে।
- * newPassword : 2 থেকে 15 characters — সংখ্যা/অক্ষর/সিম্বল/মিশ্র, যেকোনো কম্বিনেশন চলবে।
- * শুধুমাত্র Doctor role-এ লগইন করা থাকলেই এই ফাংশন কাজ করবে (Assistant পারবে না —
- * এমনকি browser console থেকে সরাসরি call করলেও না, কারণ guard সার্ভার সাইডে বসানো)।
- */
 function changePassword(token, roleToChange, newPassword) {
   requireDoctor(token);
 
@@ -110,7 +97,16 @@ function createSession(role, identifier) {
   return token;
 }
 
-// ───────────────────────── SESSION যাচাই করা ─────────────────────────
+// ───────────────────────── SESSION যাচাই করা (v2.1: Sliding Expiration) ─────────────────────────
+/**
+ * প্রতিবার এই ফাংশন কল হলে (মানে ব্যবহারকারী active থাকলে), session-এর মেয়াদ
+ * আবার ১৫ মিনিট বাড়িয়ে দেওয়া হয় (cache.put আবার করে)। এতে:
+ *  - Active ব্যবহারকারী কখনো মাঝপথে logout হবে না।
+ *  - ১৫ মিনিট idle থাকলে (কোনো action/refresh না করলে) session cache নিজে থেকেই
+ *    মুছে যাবে এবং পরের বার validate করলে invalid দেখাবে।
+ *  - App বন্ধ করে আবার খুললে (refresh সহ) — server-এ token পাঠিয়ে re-verify হয়,
+ *    বন্ধ থাকা সময়টা এখানে গোনা হয় না, cache TTL অনুযায়ীই সিদ্ধান্ত হয়।
+ */
 function validateSession(token) {
   if (!token) {
     return { valid: false, message: "Session token পাওয়া যায়নি, আবার লগইন করো।" };
@@ -124,6 +120,10 @@ function validateSession(token) {
   }
 
   const parsed = JSON.parse(sessionData);
+
+  // ── Sliding expiration: active থাকলে মেয়াদ রিফ্রেশ ──
+  cache.put(token, sessionData, SESSION_DURATION_MINUTES * 60);
+
   return { valid: true, role: parsed.role, identifier: parsed.identifier };
 }
 
@@ -136,7 +136,7 @@ function logout(token) {
   return { success: true, message: "লগআউট হয়ে গেছে।" };
 }
 
-// ───────────────────────── গার্ড: শুধু DOCTOR-এর জন্য (যেমন Finance, Categories Manage, Password Change) ─────────────────────────
+// ───────────────────────── গার্ড: শুধু DOCTOR-এর জন্য ─────────────────────────
 function requireDoctor(token) {
   const session = validateSession(token);
   if (!session.valid || session.role !== "DOCTOR") {
@@ -145,7 +145,7 @@ function requireDoctor(token) {
   return session;
 }
 
-// ───────────────────────── গার্ড: DOCTOR অথবা RECEPTIONIST/Assistant (যেমন Patient/Appointment/Test Upload) ─────────────────────────
+// ───────────────────────── গার্ড: DOCTOR অথবা RECEPTIONIST/Assistant ─────────────────────────
 function requireDoctorOrReceptionist(token) {
   const session = validateSession(token);
   if (!session.valid || (session.role !== "DOCTOR" && session.role !== "RECEPTIONIST")) {
