@@ -641,7 +641,19 @@ tbody tr:hover td{background:rgba(79,70,229,0.04);}
 @keyframes syncPulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
 @media (max-width: 768px) {
   .sync-status span.sync-label-full { display: none; }
+
+/* ── v2.1 (Phase 3a): PRESCRIPTION + FILE PREVIEW ── */
+.rx-med-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.3fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+@media (max-width: 600px) {
+  .rx-med-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; }
+  .rx-med-row button { grid-column: span 2; }
 }
+.rx-med-remove { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #EF4444; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 13px; }
+#filePreviewFrame { display: block; }
+.rx-history-item { padding: 12px 0; border-bottom: 1px solid var(--bd); }
+.rx-history-item:last-child { border-bottom: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1240,6 +1252,53 @@ tbody tr:hover td{background:rgba(79,70,229,0.04);}
   MODAL: ADD TEST RECORD
 ══════════════════════════════ -->
 <!-- ══ v2.1: ENTRY CONFIRM & SAVE — REVIEW MODAL ══ -->
+<!-- ══ v2.1 (Phase 3a): WRITE PRESCRIPTION MODAL ══ -->
+<div class="modal-overlay" id="rxModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-hd">
+      <h3>℞ Write Prescription — <span id="rxPatientName" style="color:var(--teal2);"></span></h3>
+      <button class="modal-close" onclick="closeModal('rxModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg" style="margin-bottom:14px;">
+        <span class="fl">Diagnosis *</span>
+        <textarea class="fi" id="rxDiagnosis" rows="2" placeholder="e.g. Acute Gastritis"></textarea>
+      </div>
+
+      <span class="fl" style="display:block;margin-bottom:8px;">Medicines *</span>
+      <div id="rxMedList"></div>
+      <button type="button" class="btn" style="margin-bottom:16px;" onclick="addMedicineRow()">+ Add Medicine</button>
+
+      <div class="form-grid g2" style="margin-bottom:14px;">
+        <div class="fg"><span class="fl">Advice</span><textarea class="fi" id="rxAdvice" rows="2" placeholder="e.g. Take plenty of water, avoid spicy food"></textarea></div>
+        <div class="fg"><span class="fl">Next Visit</span><input type="date" class="fi" id="rxNextVisit"></div>
+      </div>
+      <div id="rxModalMsg"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('rxModal')">Cancel</button>
+      <button class="btn btn-teal" id="rxSaveBtn" onclick="submitPrescription()">💾 Save & Send Prescription</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ v2.1 (Phase 3a): FILE PREVIEW / PRINT / DOWNLOAD MODAL ══ -->
+<div class="modal-overlay" id="filePreviewModal">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-hd">
+      <h3 id="filePreviewTitle">File Preview</h3>
+      <button class="modal-close" onclick="closeModal('filePreviewModal')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <iframe id="filePreviewFrame" src="" style="width:100%;height:60vh;border:none;background:#fff;"></iframe>
+    </div>
+    <div class="modal-foot">
+      <a id="filePreviewDownload" href="#" target="_blank" class="btn">⬇️ Download</a>
+      <button class="btn btn-rose" onclick="printFilePreview()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="confirmEntryModal">
   <div class="modal" style="max-width:480px;">
     <div class="modal-hd">
@@ -1410,6 +1469,7 @@ var D = {
   patients:     [],
   appointments: [],
   testRecords:  [],
+  prescriptions: [],   // ← নতুন
   settings:     {},
   categories:   [],
   commsLog:     []
@@ -2355,6 +2415,119 @@ function confirmEntryEdit() {
   else if (_pendingEntry.type === 'appointment') openModal('apptModal');
 }
 
+// ═══════════════════════════════════════
+// v2.1 (Phase 3a): FILE PREVIEW / PRINT / DOWNLOAD
+// ═══════════════════════════════════════
+function openFilePreview(driveUrl, title) {
+  if (!driveUrl) { showToast('কোনো ফাইল পাওয়া যায়নি।', 'err'); return; }
+  var idMatch = driveUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (!idMatch) { window.open(driveUrl, '_blank'); return; }
+  var fileId = idMatch[1];
+  document.getElementById('filePreviewTitle').textContent = title || 'File Preview';
+  document.getElementById('filePreviewFrame').src = 'https://drive.google.com/file/d/' + fileId + '/preview';
+  document.getElementById('filePreviewDownload').href = 'https://drive.google.com/uc?export=download&id=' + fileId;
+  openModal('filePreviewModal');
+}
+
+function printFilePreview() {
+  var src = document.getElementById('filePreviewFrame').src;
+  var m = src.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (!m) return;
+  // Drive-এর নিজস্ব preview viewer নতুন ট্যাবে খুলে দিচ্ছে — সেখানে উপরের ডান কোণায়
+  // Drive-এর নিজস্ব 🖨️ Print আইকন আছে, সেটাতে চাপলেই সরাসরি প্রিন্ট হয়ে যাবে।
+  window.open('https://drive.google.com/file/d/' + m[1] + '/preview', '_blank');
+}
+
+// ═══════════════════════════════════════
+// v2.1 (Phase 3a): WRITE PRESCRIPTION
+// ═══════════════════════════════════════
+var _rxPatient  = null;
+var _rxMedCount = 0;
+
+function openWritePrescription(pid) {
+  var p = D.patients.find(function(x){ return x.patientId === pid; });
+  if (!p) return;
+  _rxPatient = p;
+  document.getElementById('rxPatientName').textContent = p.fullName + ' (' + p.patientId + ')';
+  document.getElementById('rxMedList').innerHTML = '';
+  _rxMedCount = 0;
+  addMedicineRow();
+  setVal('rxDiagnosis', '');
+  setVal('rxAdvice', '');
+  setVal('rxNextVisit', '');
+  document.getElementById('rxModalMsg').innerHTML = '';
+  closeModal('ptDetailModal');
+  openModal('rxModal');
+}
+
+function addMedicineRow() {
+  var idx = _rxMedCount++;
+  var wrap = document.createElement('div');
+  wrap.className = 'rx-med-row';
+  wrap.id = 'rxMedRow' + idx;
+  wrap.innerHTML =
+    '<input class="fi" placeholder="Medicine Name" id="rxMedName' + idx + '">' +
+    '<input class="fi" placeholder="Dosage (1+0+1)" id="rxMedDosage' + idx + '">' +
+    '<input class="fi" placeholder="Duration (7 days)" id="rxMedDuration' + idx + '">' +
+    '<input class="fi" placeholder="Instructions" id="rxMedInstr' + idx + '">' +
+    '<button type="button" class="rx-med-remove" onclick="removeMedicineRow(' + idx + ')">✕</button>';
+  document.getElementById('rxMedList').appendChild(wrap);
+}
+
+function removeMedicineRow(idx) {
+  var el = document.getElementById('rxMedRow' + idx);
+  if (el) el.remove();
+}
+
+function submitPrescription() {
+  if (!_rxPatient) return;
+  var diagnosis = getVal('rxDiagnosis').trim();
+  if (!diagnosis) { showAl('rxModalMsg', 'err', 'Diagnosis দিতে হবে।'); return; }
+
+  var meds = [];
+  document.querySelectorAll('.rx-med-row').forEach(function(row) {
+    var idx  = row.id.replace('rxMedRow', '');
+    var name = getVal('rxMedName' + idx).trim();
+    if (name) {
+      meds.push({
+        name: name,
+        dosage: getVal('rxMedDosage' + idx).trim(),
+        duration: getVal('rxMedDuration' + idx).trim(),
+        instructions: getVal('rxMedInstr' + idx).trim()
+      });
+    }
+  });
+  if (!meds.length) { showAl('rxModalMsg', 'err', 'অন্তত একটা Medicine নাম দিতে হবে।'); return; }
+
+  var data = {
+    patientId:    _rxPatient.patientId,
+    patientName:  _rxPatient.fullName,
+    patientPhone: _rxPatient.phone,
+    patientEmail: _rxPatient.email,
+    diagnosis:    diagnosis,
+    advice:       getVal('rxAdvice').trim(),
+    nextVisit:    getVal('rxNextVisit'),
+    medicines:    meds
+  };
+
+  var btn = document.getElementById('rxSaveBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Saving...';
+
+  call('savePrescription', [data], function(r) {
+    btn.disabled = false; btn.innerHTML = '💾 Save & Send Prescription';
+    if (r && r.success) {
+      closeModal('rxModal');
+      showToast('Prescription saved!' + (r.emailSent ? ' Email পাঠানো হয়েছে।' : ''), 'ok');
+      if (r.whatsappLink) {
+        window.open(r.whatsappLink, '_blank'); // WhatsApp চ্যাট খুলে যাবে, শুধু Send-এ ট্যাপ করতে হবে
+      }
+      viewPatient(_rxPatient.patientId); // patient detail নতুন prescription সহ রিফ্রেশ
+    } else {
+      showAl('rxModalMsg', 'err', (r && r.message) || 'Save failed.');
+    }
+  });
+}
+
 function viewPatient(pid) {
   var p = D.patients.find(function(x){ return x.patientId === pid; });
   if (!p) return;
@@ -2373,6 +2546,13 @@ function viewPatient(pid) {
       '<div class="fg"><span class="fl">Last Visit</span><div style="color:var(--sil);">' + (p.lastVisit||'—') + '</div></div>' +
       (p.notes ? '<div class="fg" style="grid-column:1/-1;"><span class="fl">Notes</span><div class="quick-note">' + p.notes + '</div></div>' : '') +
     '</div>' +
+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">' +
+      '<h4 style="font-family:Syne,sans-serif;font-size:14px;margin:0;color:var(--sil);">℞ PRESCRIPTIONS</h4>' +
+      '<button class="btn btn-teal" style="padding:6px 14px;font-size:12px;" onclick="openWritePrescription(\'' + p.patientId + '\')">🖊 Write New Prescription</button>' +
+    '</div>' +
+    '<div id="ptRxHistory" style="font-size:13px;color:var(--sil);margin-bottom:16px;"><p style="color:var(--sil2);">Loading...</p></div>' +
+
     '<h4 style="font-family:Syne,sans-serif;font-size:14px;margin-bottom:10px;color:var(--sil);">RECENT APPOINTMENTS</h4>' +
     '<div style="font-size:13px;color:var(--sil);">' +
       (!appts.length ? '<div class="empty" style="padding:20px;"><div class="ei">📅</div><p>No appointments</p></div>' :
@@ -2392,13 +2572,29 @@ function viewPatient(pid) {
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd);">' +
             '<span>' + (t.testName||'—') + '</span>' +
             '<span style="color:var(--sil2);">' + fmtDate(t.testDate) + '</span>' +
-            (t.fileLink ? '<a href="' + t.fileLink + '" target="_blank" style="font-size:12px;color:var(--teal2);text-decoration:none;">📎 View</a>' : '') +
+            (t.fileLink ? '<button class="btn" style="padding:4px 10px;font-size:12px;" onclick="openFilePreview(\'' + t.fileLink + '\', \'' + (t.testName||'Test Result') + '\')">👁 Preview</button>' : '') +
           '</div>';
         }).join('')
       ) +
     '</div>';
 
   openModal('ptDetailModal');
+
+  // ── v2.1: Prescription history আলাদাভাবে লোড করা (async, patient খোলার সাথে সাথেই দ্রুত মডাল দেখানোর জন্য) ──
+  call('getPrescriptionsForPatient', [pid], function(r) {
+    var box = document.getElementById('ptRxHistory');
+    if (!box) return; // ইউজার মডাল বন্ধ করে দিলে
+    if (r && r.success && r.prescriptions.length) {
+      box.innerHTML = r.prescriptions.map(function(rx) {
+        return '<div class="rx-history-item"><div style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<span><b>' + rx.PrescriptionID + '</b> — ' + fmtDate(rx.Date) + '</span>' +
+          (rx.FileLink ? '<button class="btn" style="padding:4px 10px;font-size:12px;" onclick="openFilePreview(\'' + rx.FileLink + '\', \'Prescription ' + rx.PrescriptionID + '\')">👁 Preview</button>' : '') +
+          '</div><div style="color:var(--sil2);font-size:12px;margin-top:3px;">' + rx.Diagnosis + '</div></div>';
+      }).join('');
+    } else {
+      box.innerHTML = '<p style="color:var(--sil2);">No prescriptions yet.</p>';
+    }
+  });
 }
 
 // ═══════════════════════════════════════

@@ -269,3 +269,51 @@ function getPrescriptionsForPatientInternal_(patientId) {
   list.reverse();
   return { success: true, prescriptions: list };
 }
+
+// ───────────────────────── AUTO-SETUP: প্রয়োজনীয় Sheet/Tab নিজে থেকে তৈরি করা ─────────────────────────
+/**
+ * এই ফাংশনটা একবার Apps Script editor থেকে ম্যানুয়ালি Run করলেই হবে।
+ * এটা চেক করে দেখে কোন Tab আগে থেকে আছে — থাকলে কিছুই করে না (পুরনো ডেটা অক্ষত থাকে)।
+ * না থাকলে headers + styling সহ নতুন Tab বানিয়ে দেয়।
+ * নতুন কোনো ফিচারের জন্য নতুন Sheet লাগলে এখানেই যোগ করা হবে — সবসময় এই একটাই
+ * ফাংশন Run করলেই সব আপডেট হয়ে যাবে।
+ */
+function setupAumatiqSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  const requiredSheets = {
+    "Prescriptions": ["PrescriptionID", "PatientID", "PatientName", "Date", "Diagnosis", "Medicines", "Advice", "NextVisit", "CreatedBy", "FileLink"]
+  };
+
+  const createdList = [];
+  const skippedList = [];
+
+  Object.keys(requiredSheets).forEach(function (sheetName) {
+    let sheet = ss.getSheetByName(sheetName);
+
+    if (sheet) {
+      skippedList.push(sheetName); // আগে থেকেই আছে — কিছুই বদলানো হয়নি
+      return;
+    }
+
+    const headers = requiredSheets[sheetName];
+    sheet = ss.insertSheet(sheetName);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length)
+      .setFontWeight("bold")
+      .setBackground("#0D1117")
+      .setFontColor("#F8F9FF");
+    sheet.setFrozenRows(1);
+    sheet.autoResizeColumns(1, headers.length);
+    createdList.push(sheetName);
+  });
+
+  const message =
+    "✅ Setup সম্পন্ন।\n\n" +
+    "নতুন তৈরি হলো: " + (createdList.length ? createdList.join(", ") : "কোনোটাই না — সব আগে থেকেই ছিল।") + "\n" +
+    "আগে থেকেই ছিল (স্পর্শ করা হয়নি): " + (skippedList.length ? skippedList.join(", ") : "কোনোটাই না।");
+
+  Logger.log(message);
+  return message;
+}
+
