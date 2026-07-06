@@ -389,6 +389,44 @@
     .clinic-header h1 { font-size: 24px; }
   }
 </style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PWA SNIPPET 
+════════════════════════════════════════════════════════════ -->
+
+<!-- PWA: manifest link -->
+<link rel="manifest" href="/manifest.json">
+
+<!-- PWA: theme color (address bar color, Android) -->
+<meta name="theme-color" content="#0A0A0F">
+
+<!-- PWA: iOS home screen support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SkyBlue Clinic">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+
+<!-- PWA: Service Worker registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function (reg) {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+        })
+        .catch(function (err) {
+          console.warn('[PWA] Service Worker registration failed:', err);
+        });
+    });
+  }
+</script>
+
+<!-- ═══ END PWA SNIPPET ═══ -->
+
 </head>
 <body>
 
