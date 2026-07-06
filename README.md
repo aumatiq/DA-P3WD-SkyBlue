@@ -1,2 +1,5 @@
-# DA-P3WD-SkyBlue
-Aumatiq_Doctor's Automation_Project 3_For Women Doctor_Sky Blue Layout
+# website
+AUMATIQ — Doctor Automation System - Dr. Asma
+
+AUMATIQ — clinic.drasma@gmail.com — All Rights Reserved. 
+Powered by Google Apps Script + Google Drive + Gmail
