@@ -1,6 +1,0 @@
-# ── clasp শুধু এগুলোই Apps Script-এ push করবে: .gs, .html, appsscript.json ──
-# ── বাকি সব (docs, png, txt, workflow files) GitHub-এ থাকবে কিন্তু Apps Script-এ যাবে না ──
-**/**
-!appsscript.json
-!**/*.gs
-!**/*.html
